@@ -1,21 +1,15 @@
-# Safely handle passwords on your Mac
+# Get pws on your machine with the keyboard.
 
-This repository will enable you to perform following actions:
+### Features: 
 
-- Encrypt any file (geneartes key)
-- Decrypt any file (needs key)
-- Copy login and password into clipboard
-- Add new password
-- Update existing password
-- Remove pw
+- Copy data into clipboard
 
-The app may either use config parser (config.ini) and store data there, 
-or it may store data inside JSON files.
+### Todo:
 
-### Current Next steps:
-- Set up config.ini
-- Set up "get_pw" without encryption
+- Encrypt / Decrypt creds file
+- copy username and pw into clipboard
+- crud operations:
+    - Add new password 
+    - Update existing password
+    - Remove pw
 
-
-### Maybe / Someday:
-- Use toml? # python_pw_cli

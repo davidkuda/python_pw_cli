@@ -2,7 +2,10 @@
 """
 Execute this command to get pw from json into clipboard.
 
-`pw <name>` ->
+`pw <name>` -> Get the password of <name> from the section main
+`pw <name> <section>` -> Get the password of <name> from the section <section>
+`pw sections` -> Print all available sections
+`pw section <section>` -> Print all available keys of <section>
 """
 import sys
 import json

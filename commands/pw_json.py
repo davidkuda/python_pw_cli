@@ -1,15 +1,14 @@
 #!/Library/Frameworks/Python.framework/Versions/3.9/bin/python3
 """
 Execute this command to get pw from json into clipboard.
+
+`pw <name>` ->
 """
 import sys
-import os
 import json
 # import argparse
 import pyperclip
-
-
-file_path = ''
+from config.pw_config import creds_file_path
 
 
 def get_pws_from_json_file(file_path):
@@ -50,7 +49,7 @@ def validate_user_input(args, num=1, response_msg='Pass an arg after pw'):
 
 
 def main():
-    pws = get_pws_from_json_file(file_path)
+    pws = get_pws_from_json_file(creds_file_path)
     args = sys.argv
     validate_user_input(args)
     user_input = args[1:]

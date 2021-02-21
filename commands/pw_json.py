@@ -56,7 +56,23 @@ def validate_user_input(args, num=1, response_msg='Pass an arg after pw'):
         pass
 
 
+def open_pw_file(pw_file_path, app: str = 'Sublime'):
+    """Open pw file with an app (default: Sublime)."""
+    pass
+
+
+def decrypt(pw_file_path):
+    """Decrypt pw file."""
+    pass
+
+
+def encrypt(pw_file_path):
+    """Encrypt pw file."""
+    pass
+
+
 def main():
+    # Encrypt pw file
     pws = get_pws_from_json_file(creds_file_path)
     args = sys.argv
     validate_user_input(args)
@@ -78,6 +94,8 @@ def main():
     if len(user_input) > 1:
         pw_category = user_input[1]
         return get_pw(pws, pw_key, pw_category)
+
+    # Decrypt pw file
 
 
 if __name__ == '__main__':

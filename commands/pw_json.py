@@ -15,22 +15,26 @@ from config.pw_config import creds_file_path
 
 
 def get_pws_from_json_file(file_path):
+    """Loads json data into python to retrieve passwords that are stored as key value pairs."""
     with open(file_path) as pws:
         return json.load(pws)
 
 
-def print_sections(d):
-    for key in d.keys():
+def print_sections(pw_file: dict):
+    """Print all keys of a dictionary (depth -> 1)."""
+    for key in pw_file.keys():
         print(key)
 
 
-def print_keys_of_section(d, section_name):
-    for key in d[section_name].keys():
+def print_keys_of_section(pw_file: dict, section_name):
+    """Output all available keys of a section to the console."""
+    for key in pw_file[section_name].keys():
         print(key)
 
 
-def get_pw(pws, pw_key, pw_category='main'):
-    pw = pws[pw_category][pw_key]
+def get_pw(pw_file: dict, pw_key: str, section: str = 'main'):
+    """Access a dictionary's data (pws[section][pw_key]) and copy value to clipboard."""
+    pw = pw_file[section][pw_key]
     pyperclip.copy(pw)
 
 
@@ -42,6 +46,7 @@ def my_exchandler(type, value, traceback):
 
 
 def validate_user_input(args, num=1, response_msg='Pass an arg after pw'):
+    """Validate if user has passed the correct number of args with the command."""
     try:
         args[num]
     except IndexError:

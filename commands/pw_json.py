@@ -34,7 +34,7 @@ def print_keys_of_section(pw_file: dict, section_name):
 
 def get_pw(pw_file: dict, pw_key: str, section: str = 'main'):
     """Access a dictionary's data (pws[section][pw_key]) and copy value to clipboard."""
-    pw = pw_file[section][pw_key]
+    pw = pw_file[section][pw_key]['password']
     pyperclip.copy(pw)
 
 

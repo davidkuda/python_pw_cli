@@ -26,7 +26,7 @@ def print_keys_of_section(d, section_name):
         print(key)
 
 
-def get_pw(pws, pw_key, pw_category='uncategorized'):
+def get_pw(pws, pw_key, pw_category='main'):
     pw = pws[pw_category][pw_key]
     pyperclip.copy(pw)
 

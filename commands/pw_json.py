@@ -11,6 +11,7 @@ import sys
 import json
 import string
 import random
+import datetime
 # import argparse
 import pyperclip
 from config.pw_config import creds_file_path
@@ -40,6 +41,14 @@ def get_pw(pw_file: dict, pw_key: str, section: str = 'main'):
     pyperclip.copy(pw)
 
 
+def create_backup(pw_dict: dict):
+    """Create a backup of the dictionary with the passwords."""
+    now = datetime.datetime.now().isoformat()
+    pretty_now = now.split('.')[0].replace(':', '.')
+    with open(f'./backups/{pretty_now}', 'w') as pw_file_json:
+        json.dump(pw_dict, pw_file_json)
+
+
 def generate_random_password():
     """Generates a random password with 42 characters of any type (letters, digits, special characters)."""
     characters = string.printable
@@ -50,6 +59,8 @@ def generate_random_password():
 def add_new_pw(pw_dict: dict, service: str, file_path: str, password: str = None, user_name: str = None,
                website: str = None, section: 'str' = 'main') -> None:
     """Adds a new password to the password file."""
+
+    create_backup(pw_dict)
 
     if password is None:
         password = generate_random_password()

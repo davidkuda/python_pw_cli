@@ -47,6 +47,24 @@ def generate_random_password():
     return random_password
 
 
+def add_new_pw(pw_dict: dict, service: str, file_path: str, password: str = None, user_name: str = None,
+               website: str = None, section: 'str' = 'main') -> None:
+    """Adds a new password to the password file."""
+
+    if password is None:
+        password = generate_random_password()
+
+    new_password = {service: {}}
+    new_password[service]['password'] = password
+    new_password[service]['user_name'] = user_name if user_name else 'not specified'
+    new_password[service]['website'] = website if website else 'not specified'
+
+    pw_dict.update(new_password)
+
+    with open(file_path, 'w') as pw_file_json:
+        json.dump(pw_dict, pw_file_json)
+
+
 def my_exchandler(type, value, traceback):
     """Set 'sys.excepthook' to myexchandler to avoid traceback.
      Credits: https://stackoverflow.com/questions/38598740/raising-errors-without-traceback

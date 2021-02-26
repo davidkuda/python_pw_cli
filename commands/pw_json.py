@@ -9,6 +9,8 @@ Execute this command to get pw from json into clipboard.
 """
 import sys
 import json
+import string
+import random
 # import argparse
 import pyperclip
 from config.pw_config import creds_file_path
@@ -36,6 +38,13 @@ def get_pw(pw_file: dict, pw_key: str, section: str = 'main'):
     """Access a dictionary's data (pws[section][pw_key]) and copy value to clipboard."""
     pw = pw_file[section][pw_key]['password']
     pyperclip.copy(pw)
+
+
+def generate_random_password():
+    """Generates a random password with 42 characters of any type (letters, digits, special characters)."""
+    characters = string.printable
+    random_password = ''.join(random.choice(characters) for i in range(42))
+    return random_password
 
 
 def my_exchandler(type, value, traceback):

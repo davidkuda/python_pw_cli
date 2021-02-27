@@ -12,7 +12,7 @@ import json
 import string
 import random
 import datetime
-# import argparse
+import argparse
 import pyperclip
 from config.pw_config import creds_file_path
 
@@ -109,6 +109,26 @@ def encrypt(pw_file_path):
     pass
 
 
+def argparse_action():
+    pws = get_pws_from_json_file(creds_file_path)
+    parser = argparse.ArgumentParser()
+    parser.add_argument('input', type=str)
+    parser.add_argument('-a', '--availability', action='store_true')
+    parser.add_argument('-s', '--section', type=str)
+    args = parser.parse_args()
+
+    if args.availability:
+        return print_keys_of_section(pws, args.input)
+
+    if args.section:
+        return get_pw(pws, args.section, args.input)
+
+    if args.input == 'sections':
+        return print_sections(pws)
+
+    return get_pw(pws, args.input)
+
+
 def main():
     # Encrypt pw file
     pws = get_pws_from_json_file(creds_file_path)
@@ -137,4 +157,4 @@ def main():
 
 
 if __name__ == '__main__':
-    main()
+    argparse_action()

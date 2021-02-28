@@ -13,7 +13,7 @@ from commands.pw_config import creds_file_path
 import pw_client
 
 
-def argparse_action():
+def main():
     pw = pw_client.PasswordClient(creds_file_path)
     parser = argparse.ArgumentParser()
     parser.add_argument('input', type=str)
@@ -33,32 +33,5 @@ def argparse_action():
     return pw.get_pw(args.input)
 
 
-def main():
-    # Encrypt pw file
-    pws = get_pws_from_json_file(creds_file_path)
-    args = sys.argv
-    validate_user_input(args)
-    user_input = args[1:]
-
-    if user_input[0] == 'sections':
-        return print_sections(pws)
-
-    if user_input[0] == 'section':
-        validate_user_input(user_input, 1, 'add arg after section')
-        section = user_input[1]
-        return print_keys_of_section(pws, section)
-
-    pw_key = user_input[0]
-
-    if len(user_input) == 1:
-        return get_pw(pws, pw_key)
-
-    if len(user_input) > 1:
-        pw_category = user_input[1]
-        return get_pw(pws, pw_key, pw_category)
-
-    # Decrypt pw file
-
-
 if __name__ == '__main__':
-    argparse_action()
+    main()

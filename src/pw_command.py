@@ -7,9 +7,8 @@ Execute this command to get pw from json into clipboard.
 `pw sections` -> Print all available sections
 `pw section <section>` -> Print all available keys of <section>
 """
-import sys
 import argparse
-from commands.pw_config import creds_file_path
+from pw_config import creds_file_path
 import pw_client
 
 

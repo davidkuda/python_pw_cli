@@ -8,9 +8,10 @@ import sys
 
 
 class PasswordClient:
-    def __init__(self, file_path: str):
-        self.file_path = file_path
-        self.pw_dict = pw_utils.get_pws_from_json_file(file_path)
+    def __init__(self, creds_dir: str, creds_file_path: str):
+        self.creds_dir = creds_dir
+        self.creds_file_path = creds_file_path
+        self.pw_dict = pw_utils.get_pws_from_json_file(creds_file_path)
 
     def print_sections(self):
         """Print all keys of a dictionary (depth -> 1)."""
@@ -31,7 +32,7 @@ class PasswordClient:
         """Create a backup of the dictionary with the passwords."""
         now = datetime.datetime.now().isoformat()
         pretty_now = now.split('.')[0].replace(':', '.')
-        with open(f'./backups/{pretty_now}', 'w') as pw_file_json:
+        with open(f'{self.creds_dir}/backups/{pretty_now}', 'w') as pw_file_json:
             json.dump(self.pw_dict, pw_file_json)
 
     @staticmethod
@@ -41,7 +42,7 @@ class PasswordClient:
         random_password = ''.join(random.choice(characters) for i in range(42))
         return random_password
 
-    def add_new_pw(self, service: str, file_path: str, password: str = None, user_name: str = None,
+    def add_new_pw(self, service: str, password: str = None, user_name: str = None,
                    website: str = None, section: 'str' = 'main') -> None:
         """Adds a new password to the password file."""
 
@@ -57,7 +58,7 @@ class PasswordClient:
 
         self.pw_dict.update(new_password)
 
-        with open(file_path, 'w') as pw_file_json:
+        with open(self.creds_file_path, 'w') as pw_file_json:
             json.dump(self.pw_dict, pw_file_json)
 
         @staticmethod

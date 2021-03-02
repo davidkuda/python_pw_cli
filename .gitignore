@@ -3,3 +3,5 @@
 .idea/
 commands/snippets
 encrypt.py
+.venv/
+src/__pycache__/

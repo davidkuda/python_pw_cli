@@ -1,4 +1,4 @@
-#!/Library/Frameworks/Python.framework/Versions/3.9/bin/python3
+#!/usr/local/bin/python3
 """
 Execute this command to get pw from json into clipboard.
 

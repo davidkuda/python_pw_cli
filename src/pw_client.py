@@ -44,8 +44,17 @@ class PasswordClient:
 
     def add_new_pw(self, service: str, password: str = None, user_name: str = None,
                    website: str = None, section: 'str' = 'main') -> None:
-        """Adds a new password to the password file."""
+        """Adds a new password to the password file.
 
+        Args:
+            service (str): The entity that you need the password for, e.g. "GitHub"
+            password (str, optional): If you want, you can specify a password. If you leave it,
+              it will generate a random password with 42 characters.
+            user_name (str, optional): Pass a user name if you want to add it to the json file.
+            website (str, optional): Pass a website if you want to add it to the json file.
+            section (str, optional): You may set the section of the json file to which this
+              password will be added to. Defaults to the section "main".
+        """
         self.create_backup()
 
         if password is None:

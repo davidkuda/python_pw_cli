@@ -3,9 +3,20 @@
 Execute this command to get pw from json into clipboard.
 
 `pw <name>` -> Get the password of <name> from the section main
-`pw <name> <section>` -> Get the password of <name> from the section <section>
 `pw sections` -> Print all available sections
-`pw section <section>` -> Print all available keys of <section>
+`pw -a <section>` -> Print all available keys of <section>
+`pw -s <section> <name>` -> Get the password of <name> from the section <section>
+
+The creds.json file should look like this:
+
+"section": {
+        "service": {
+            "password": "lorem",
+            "user_name": "ipsum",
+            "additional_info": "...",
+            "website": "www.kuda.ai"
+        }
+    }
 """
 import argparse
 from pw_config import CREDS_DIR, CREDS_FILE_PATH

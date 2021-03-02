@@ -8,12 +8,12 @@ Execute this command to get pw from json into clipboard.
 `pw section <section>` -> Print all available keys of <section>
 """
 import argparse
-from pw_config import creds_file_path
+from pw_config import CREDS_DIR, CREDS_FILE_PATH
 import pw_client
 
 
 def main():
-    pw = pw_client.PasswordClient(creds_file_path)
+    pw = pw_client.PasswordClient(CREDS_DIR, CREDS_FILE_PATH)
     parser = argparse.ArgumentParser()
     parser.add_argument('input', type=str)
     parser.add_argument('-a', '--availability', action='store_true')

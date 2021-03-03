@@ -1,17 +1,13 @@
 #!/usr/local/bin/python3
 """
 Execute this command to get pw from json into clipboard.
-
-`pw <name>` -> Get the password of <name> from the section main
-`pw sections` -> Print all available sections
-`pw -a <section>` -> Print all available keys of <section>
-`pw -r input` -> Create a random password, print it to the console, copy to clipboard
-`pw -s <section> <name>` -> Get the password of <name> from the section <section>
+Type "pw -h" to get help on all available commands.
+Basic usage: "pw -g <entity>" -> Gets password of entity from main section.
 
 The creds.json file should look like this:
 
 "section": {
-        "service": {
+        "entity": {
             "password": "lorem",
             "user_name": "ipsum",
             "additional_info": "...",

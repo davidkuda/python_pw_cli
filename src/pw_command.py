@@ -43,24 +43,22 @@ def main():
     parser.add_argument('-r', '--generate_random_pw', action='store_true', help=HELP_TEXT['generate_random_pw'])
     args = parser.parse_args()
 
-    # if args.availability:
-    #     return pw.print_keys_of_section(args.get_password)
+    if args.get_password:
+        return pw.get_pw(args.get_password)
 
-    if args.random_pw:
+    if args.all_sections:
+        return pw.print_sections()
+
+    if args.section:
+        return pw.print_keys_of_section(args.section)
+
+    if args.generate_random_pw:
         random_pw = pw.generate_random_password()
         print('Here is your random password:')
         print(random_pw)
         print('It has been copied into your clipboard.')
         pyperclip.copy(random_pw)
         return
-
-    if args.section:
-        return pw.get_pw(args.section, args.get_password)
-
-    if args.all_sections:
-        return pw.print_sections()
-
-    return pw.get_pw(args.get_password)
 
 
 if __name__ == '__main__':

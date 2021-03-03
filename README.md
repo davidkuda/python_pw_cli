@@ -7,6 +7,7 @@ for the commands below. Here is what this tool can do:
 
 - Copy passwords from a json file into clipboard
 - Generate a random password with a length of 42 characters and save it to the json file as a new password
+- Add a new random password from your command line into the creds.json file and copy into clipboard
 
 ### How I set it up:
 
@@ -26,15 +27,17 @@ Furthermore, you need to assure two things:
 
 ### Commands:
 
-- `pw <name>` -> Get the password of <name> from the section main
-- `pw sections` -> Print all available sections
-- `pw -a <section>` -> Print all available keys of <section>
-- `pw -s <section> <name>` -> Get the password of <name> from the section <section>
+- `pw -g <name>` -> Get the password of `<name>` from the section main
+- `pw -as` -> Print all available sections
+- `pw -s <section>` -> Print all available entities of the given section
+- `pw -gs <name> <section>` -> Get the password of `<name>` from `<section>`
+- `pw -r` -> Generate a random password with 42 characters, print it and copy it to the clipboard
+- `pw -n <name>` -> Add a new randomly created password to the creds.json file for the entity `<name>`  
 
 ### Todo:
 
-- Optionally, but additionally to the password, update the json with a username and a website
-- backup json file
+- Optionally, but additionally to the password, update the json with a username and a website. 
+  How can I pass optionally add more args to "-n"?
 - Encrypt / Decrypt creds file
 - copy username into clipboard
 - check what additional information is available on the service

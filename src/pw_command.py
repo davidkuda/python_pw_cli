@@ -5,6 +5,7 @@ Execute this command to get pw from json into clipboard.
 `pw <name>` -> Get the password of <name> from the section main
 `pw sections` -> Print all available sections
 `pw -a <section>` -> Print all available keys of <section>
+`pw -r input` -> Create a random password, print it to the console, copy to clipboard
 `pw -s <section> <name>` -> Get the password of <name> from the section <section>
 
 The creds.json file should look like this:
@@ -21,6 +22,9 @@ The creds.json file should look like this:
 import argparse
 from pw_config import CREDS_DIR, CREDS_FILE_PATH
 import pw_client
+import pyperclip
+
+
 HELP_TEXT = {
         'get_password': 'Get a password. Pass entity as argument.',
         'all_sections': 'Print all available sections.',
@@ -41,6 +45,14 @@ def main():
 
     # if args.availability:
     #     return pw.print_keys_of_section(args.get_password)
+
+    if args.random_pw:
+        random_pw = pw.generate_random_password()
+        print('Here is your random password:')
+        print(random_pw)
+        print('It has been copied into your clipboard.')
+        pyperclip.copy(random_pw)
+        return
 
     if args.section:
         return pw.get_pw(args.section, args.get_password)

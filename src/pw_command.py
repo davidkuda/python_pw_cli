@@ -27,6 +27,7 @@ import pyperclip
 
 HELP_TEXT = {
         'get_password': 'Get a password. Pass entity as argument.',
+        'get_password_from_section': 'Get a password from a specified section. "pw -ga <entity> <section>',
         'all_sections': 'Print all available sections.',
         'section': 'Pass a section to print all entities of that section.',
         'generate_random_pw': 'Print a randomly generated password and add it to your clipboard.'
@@ -37,6 +38,7 @@ def main():
     pw = pw_client.PasswordClient(CREDS_DIR, CREDS_FILE_PATH)
     parser = argparse.ArgumentParser(description='Manage your passwords from the terminal.')
     parser.add_argument('-g', '--get_password', type=str, help=HELP_TEXT['get_password'])
+    parser.add_argument('-gs', '--get_password_from_section', type=str, nargs=2, help='')
     parser.add_argument('-as', '--all_sections', action='store_true', help=HELP_TEXT['all_sections'])
     parser.add_argument('-s', '--section', type=str, help=HELP_TEXT['section'])
     parser.add_argument('-a', '--add_new_password', type=str, help=HELP_TEXT['add_new_password'])
@@ -45,6 +47,11 @@ def main():
 
     if args.get_password:
         return pw.get_pw(args.get_password)
+
+    if args.get_password_from_section:
+        entity = args.get_password_from_section[0]
+        section = args.get_password_from_section[1]
+        return pw.get_pw(entity, section)
 
     if args.all_sections:
         return pw.print_sections()

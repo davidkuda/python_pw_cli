@@ -26,6 +26,7 @@ HELP_TEXT = {
         'get_password_from_section': 'Get a password from a specified section. "pw -ga <entity> <section>',
         'all_sections': 'Print all available sections.',
         'section': 'Pass a section to print all entities of that section.',
+        'add_new_password': 'Pass an entity as arg and add a new password to the json file.',
         'generate_random_pw': 'Print a randomly generated password and add it to your clipboard.'
     }
 
@@ -37,7 +38,7 @@ def main():
     parser.add_argument('-gs', '--get_password_from_section', type=str, nargs=2, help='')
     parser.add_argument('-as', '--all_sections', action='store_true', help=HELP_TEXT['all_sections'])
     parser.add_argument('-s', '--section', type=str, help=HELP_TEXT['section'])
-    parser.add_argument('-a', '--add_new_password', type=str, help=HELP_TEXT['add_new_password'])
+    parser.add_argument('-n', '--add_new_password', type=str, help=HELP_TEXT['add_new_password'])
     parser.add_argument('-r', '--generate_random_pw', action='store_true', help=HELP_TEXT['generate_random_pw'])
     args = parser.parse_args()
 
@@ -51,6 +52,9 @@ def main():
 
     if args.all_sections:
         return pw.print_sections()
+
+    if args.add_new_password:
+        return pw.add_new_pw(args.add_new_password)
 
     if args.section:
         return pw.print_keys_of_section(args.section)

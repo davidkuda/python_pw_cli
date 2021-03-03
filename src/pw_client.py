@@ -45,12 +45,16 @@ class PasswordClient:
         random_password = ''.join(random.choice(characters) for i in range(42))
         return random_password
 
-    def add_new_pw(self, service: str, password: str = None, user_name: str = None,
+    def save_dict_to_file(self):
+        with open(self.creds_file_path, 'w') as pw_file_json:
+            json.dump(self.pw_dict, pw_file_json)
+
+    def add_new_pw(self, entity: str, password: str = None, user_name: str = None,
                    website: str = None, section: 'str' = 'main') -> None:
         """Adds a new password to the password file.
 
         Args:
-            service (str): The entity that you need the password for, e.g. "GitHub"
+            entity (str): The entity that you need the password for, e.g. "GitHub"
             password (str, optional): If you want, you can specify a password. If you leave it,
               it will generate a random password with 42 characters.
             user_name (str, optional): Pass a user name if you want to add it to the json file.
@@ -62,16 +66,15 @@ class PasswordClient:
 
         if password is None:
             password = self.generate_random_password()
+        pyperclip.copy(password)
 
-        new_password = {service: {}}
-        new_password[service]['password'] = password
-        new_password[service]['user_name'] = user_name if user_name else 'not specified'
-        new_password[service]['website'] = website if website else 'not specified'
+        new_password = {entity: {}}
+        new_password[entity]['password'] = password
+        new_password[entity]['user_name'] = user_name if user_name else 'tbd'
+        new_password[entity]['website'] = website if website else 'tbd'
 
-        self.pw_dict.update(new_password)
-
-        with open(self.creds_file_path, 'w') as pw_file_json:
-            json.dump(self.pw_dict, pw_file_json)
+        self.pw_dict[section].update(new_password)
+        self.save_dict_to_file()
 
         @staticmethod
         def validate_user_input(args, num=1, response_msg='Pass an arg after pw'):

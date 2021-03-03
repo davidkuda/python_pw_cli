@@ -35,19 +35,20 @@ def main():
     parser.add_argument('-g', '--get_password', type=str, help=HELP_TEXT['get_password'])
     parser.add_argument('-as', '--all_sections', action='store_true', help=HELP_TEXT['all_sections'])
     parser.add_argument('-s', '--section', type=str, help=HELP_TEXT['section'])
+    parser.add_argument('-a', '--add_new_password', type=str, help=HELP_TEXT['add_new_password'])
     parser.add_argument('-r', '--generate_random_pw', action='store_true', help=HELP_TEXT['generate_random_pw'])
     args = parser.parse_args()
 
-    if args.availability:
-        return pw.print_keys_of_section(args.input)
+    # if args.availability:
+    #     return pw.print_keys_of_section(args.get_password)
 
     if args.section:
-        return pw.get_pw(args.section, args.input)
+        return pw.get_pw(args.section, args.get_password)
 
-    if args.input == 'sections':
+    if args.all_sections:
         return pw.print_sections()
 
-    return pw.get_pw(args.input)
+    return pw.get_pw(args.get_password)
 
 
 if __name__ == '__main__':

@@ -76,26 +76,26 @@ class PasswordClient:
         self.pw_dict[section].update(new_password)
         self.save_dict_to_file()
 
-        @staticmethod
-        def validate_user_input(args, num=1, response_msg='Pass an arg after pw'):
-            """Validate if user has passed the correct number of args with the command."""
-            try:
-                args[num]
-            except IndexError:
-                sys.excepthook = pw_utils.my_exchandler
-                raise IndexError(response_msg)
-            else:
-                pass
-
-        def open_pw_file(pw_file_path, app: str = 'Sublime'):
-            """Open pw file with an app (default: Sublime)."""
+    @staticmethod
+    def validate_user_input(args, num=1, response_msg='Pass an arg after pw'):
+        """Validate if user has passed the correct number of args with the command."""
+        try:
+            args[num]
+        except IndexError:
+            sys.excepthook = pw_utils.my_exchandler
+            raise IndexError(response_msg)
+        else:
             pass
 
-        def decrypt(pw_file_path):
-            """Decrypt pw file."""
-            pass
+    def open_pw_file(pw_file_path, app: str = 'Sublime'):
+        """Open pw file with an app (default: Sublime)."""
+        pass
 
-        def encrypt(pw_file_path):
-            """Encrypt pw file."""
-            pass
+    def decrypt(pw_file_path):
+        """Decrypt pw file."""
+        pass
+
+    def encrypt(pw_file_path):
+        """Encrypt pw file."""
+        pass
 

@@ -1,5 +1,7 @@
 # Get passwords into your clipboard from the terminal.
 
+![Two sample commands](documentation/images/zalando_cli.png)
+
 ### Features: 
 
 You can run the script `pw_command.py` to manage your passwords in the command line. See the explanation

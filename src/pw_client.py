@@ -25,8 +25,13 @@ class PasswordClient:
 
     def get_pw(self, pw_key: str, section: str = 'main'):
         """Access a dictionary's data (pws[section][pw_key]) and copy value to clipboard."""
-        pw = self.pw_dict[section][pw_key]['password']
-        pyperclip.copy(pw)
+        pw_info = self.pw_dict[section][pw_key]
+        pyperclip.copy(pw_info['password'])
+
+        print(f'Copied password for "{pw_key}" into your clipboard.')
+        for k, v in pw_info.items():
+            print(f'  {k}: {v}')
+        print('')
 
     def create_backup(self):
         """Create a backup of the dictionary with the passwords."""
@@ -70,8 +75,14 @@ class PasswordClient:
 
         new_password = {entity: {}}
         new_password[entity]['password'] = password
-        new_password[entity]['user_name'] = user_name if user_name else 'tbd'
-        new_password[entity]['website'] = website if website else 'tbd'
+        new_password[entity]['user_name'] = user_name if user_name else 'not specified'
+        new_password[entity]['website'] = website if website else 'not specified'
+
+        print(f'Created new password for {entity}.')
+        print('Saved your new password to your creds file.')
+        for k, v in new_password[entity].items():
+            print(f'  {k}: {v}')
+        print('')
 
         self.pw_dict[section].update(new_password)
         self.save_dict_to_file()

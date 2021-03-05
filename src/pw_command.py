@@ -2,7 +2,7 @@
 """
 Execute this command to get pw from json into clipboard.
 Type "pw -h" to get help on all available commands.
-Basic usage: "pw -g <entity>" -> Gets password of entity from main section.
+Basic usage: "pw <entity>" -> Gets password of entity from main section.
 
 The creds.json file should look like this:
 
@@ -22,7 +22,7 @@ import pyperclip
 
 
 HELP_TEXT = {
-        'get_password': 'Get a password. Pass entity as argument.',
+        'input': 'Name of entity that holds the password.',
         'get_password_from_section': 'Get a password from a specified section. "pw -ga <entity> <section>',
         'all_sections': 'Print all available sections.',
         'section': 'Pass a section to print all entities of that section.',
@@ -34,7 +34,7 @@ HELP_TEXT = {
 def main():
     pw = pw_client.PasswordClient(CREDS_DIR, CREDS_FILE_PATH)
     parser = argparse.ArgumentParser(description='Manage your passwords from the terminal.')
-    parser.add_argument('-g', '--get_password', type=str, help=HELP_TEXT['get_password'])
+    parser.add_argument('input', type=str, help=HELP_TEXT['input'], nargs='?')
     parser.add_argument('-gs', '--get_password_from_section', type=str, nargs=2, help='')
     parser.add_argument('-as', '--all_sections', action='store_true', help=HELP_TEXT['all_sections'])
     parser.add_argument('-s', '--section', type=str, help=HELP_TEXT['section'])
@@ -42,8 +42,6 @@ def main():
     parser.add_argument('-r', '--generate_random_pw', action='store_true', help=HELP_TEXT['generate_random_pw'])
     args = parser.parse_args()
 
-    if args.get_password:
-        return pw.get_pw(args.get_password)
 
     if args.get_password_from_section:
         entity = args.get_password_from_section[0]
@@ -66,6 +64,11 @@ def main():
         print('It has been copied into your clipboard.')
         pyperclip.copy(random_pw)
         return
+
+    if args.input is None:
+        return print('Nothing happened. No args passed after pw command.')
+
+    return pw.get_pw(args.input)
 
 
 if __name__ == '__main__':

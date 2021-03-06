@@ -27,6 +27,11 @@ HELP_TEXT = {
     'section': 'Pass a section to print all entities of that section.',
     'add_new_password': 'Pass an entity as arg and add a new password to the json file.',
     'generate_random_pw': 'Print a randomly generated password and add it to your clipboard.',
+    'delete':
+        '''Delete a password from the creds file. Combine together with -s 
+        if the password you want to delete is in another section than "main".
+        Example: "pw -d GitHub -s dev" -> Remove the password for GitHub
+        from the section "dev".'''
 }
 
 
@@ -38,6 +43,7 @@ def main():
     parser.add_argument('-s', '--print_section', type=str, help=HELP_TEXT['section'])
     parser.add_argument('-r', '--generate_random_pw', action='store_true', help=HELP_TEXT['generate_random_pw'])
     parser.add_argument('-n', '--add_new_password', type=str, help=HELP_TEXT['add_new_password'])
+    parser.add_argument('-d', '--delete', type=str, help=HELP_TEXT['delete'])
 
     args = parser.parse_args()
 

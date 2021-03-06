@@ -52,8 +52,8 @@ def main():
     pw = pw_client.PasswordClient(CREDS_DIR, CREDS_FILE_PATH)
 
     if args.get_password_from_section:
-        entity = args.get_password_from_section[0]
-        section = args.get_password_from_section[1]
+        section = args.get_password_from_section[0]
+        entity = args.get_password_from_section[1]
         return pw.get_pw(entity, section)
 
     if args.all_sections:

@@ -9,7 +9,7 @@ The creds.json file should look like this:
 "section": {
         "entity": {
             "password": "lorem",
-            "user_name": "ipsum",
+            "username": "ipsum",
             "additional_info": "...",
             "website": "www.kuda.ai"
         }

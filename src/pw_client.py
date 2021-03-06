@@ -54,7 +54,7 @@ class PasswordClient:
         with open(self.creds_file_path, 'w') as pw_file_json:
             json.dump(self.pw_dict, pw_file_json)
 
-    def add_new_pw(self, entity: str, password: str = None, user_name: str = None,
+    def add_new_pw(self, entity: str, password: str = None, username: str = None,
                    website: str = None, section: 'str' = 'main') -> None:
         """Adds a new password to the password file.
 
@@ -62,7 +62,7 @@ class PasswordClient:
             entity (str): The entity that you need the password for, e.g. "GitHub"
             password (str, optional): If you want, you can specify a password. If you leave it,
               it will generate a random password with 42 characters.
-            user_name (str, optional): Pass a user name if you want to add it to the json file.
+            username (str, optional): Pass a user name if you want to add it to the json file.
             website (str, optional): Pass a website if you want to add it to the json file.
             section (str, optional): You may set the section of the json file to which this
               password will be added to. Defaults to the section "main".
@@ -75,7 +75,7 @@ class PasswordClient:
 
         new_password = {entity: {}}
         new_password[entity]['password'] = password
-        new_password[entity]['user_name'] = user_name if user_name else 'not specified'
+        new_password[entity]['username'] = username if username else 'not specified'
         new_password[entity]['website'] = website if website else 'not specified'
 
         print(f'Created new password for {entity}.')

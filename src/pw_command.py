@@ -43,6 +43,8 @@ def main():
     parser.add_argument('-s', '--print_section', type=str, help=HELP_TEXT['section'])
     parser.add_argument('-r', '--generate_random_pw', action='store_true', help=HELP_TEXT['generate_random_pw'])
     parser.add_argument('-n', '--add_new_password', type=str, help=HELP_TEXT['add_new_password'])
+    parser.add_argument('-u', '--username', type=str)
+    parser.add_argument('-w', '--website', type=str)
     parser.add_argument('-d', '--delete', type=str, help=HELP_TEXT['delete'])
 
     args = parser.parse_args()
@@ -58,7 +60,10 @@ def main():
         return pw.print_sections()
 
     if args.add_new_password:
-        return pw.add_new_pw(args.add_new_password)
+        return pw.add_new_pw(entity=args.add_new_password, username=args.username, website=args.website)
+
+    if args.delete:
+        pass
 
     if args.section:
         return pw.print_keys_of_section(args.section)

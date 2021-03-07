@@ -22,9 +22,14 @@ import pyperclip
 
 HELP_TEXT = {
     'input': 'Name of entity that holds the password.',
-    'get_password_from_section': 'Get a password from a specified section. "pw -ga <entity> <section>',
     'all_sections': 'Print all available sections.',
-    'section': 'Pass a section to print all entities of that section.',
+    'section':
+        '''Pass a section to print all entities of that section.
+        The -s flag can be used together with other functions:
+          Use it with "-add_new_password" to write pw to a specific section:
+            "pw -n GitHub -s dev
+          Use it with an argument without a flag to get a password from a specific section:
+            "pw -s dev GitHub" -- Gets password for "GitHub" from the section "dev"''',
     'add_new_password': 'Pass an entity as arg and add a new password to the json file.',
     'generate_random_pw': 'Print a randomly generated password and add it to your clipboard.',
     'remove':
@@ -38,7 +43,6 @@ HELP_TEXT = {
 def parse_args():
     parser = argparse.ArgumentParser(description='Manage your passwords from the terminal.')
     parser.add_argument('input', type=str, help=HELP_TEXT['input'], nargs='?')
-    parser.add_argument('-gs', '--get_password_from_section', type=str, nargs=2, help='')
     parser.add_argument('-as', '--all_sections', action='store_true', help=HELP_TEXT['all_sections'])
     parser.add_argument('-s', '--section', type=str, help=HELP_TEXT['section'])
     parser.add_argument('-r', '--generate_random_pw', action='store_true', help=HELP_TEXT['generate_random_pw'])
@@ -55,11 +59,6 @@ def main(parsed_args):
     args = parsed_args
     pw = pw_client.PasswordClient(CREDS_DIR, CREDS_FILE_PATH)
 
-    if args.get_password_from_section:
-        section = args.get_password_from_section[0]
-        entity = args.get_password_from_section[1]
-        return pw.get_pw(entity, section)
-
     if args.all_sections:
         return pw.print_sections()
 
@@ -69,6 +68,9 @@ def main(parsed_args):
     if args.remove:
         # TODO: Write a function in pw_client.py that deletes a password.
         pass
+
+    if args.section and args.input:
+        return pw.get_pw(args.input, args.section)
 
     if args.section:
         return pw.print_keys_of_section(args.section)

@@ -49,7 +49,7 @@ def parse_args():
     parser.add_argument('-n', '--add_new_password', type=str, help=HELP_TEXT['add_new_password'])
     parser.add_argument('-u', '--username', type=str)
     parser.add_argument('-w', '--website', type=str)
-    parser.add_argument('-rm', '--remove', type=str, help=HELP_TEXT['remove'])
+    parser.add_argument('-rm', '--remove_password', type=str, help=HELP_TEXT['remove'])
 
     args = parser.parse_args()
     return args
@@ -65,7 +65,7 @@ def main(parsed_args):
     if args.add_new_password:
         return pw.add_new_pw(entity=args.add_new_password, username=args.username, website=args.website)
 
-    if args.remove:
+    if args.remove_password:
         # TODO: Write a function in pw_client.py that deletes a password.
         pass
 

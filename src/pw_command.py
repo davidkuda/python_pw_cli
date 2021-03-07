@@ -40,7 +40,7 @@ def main():
     parser.add_argument('input', type=str, help=HELP_TEXT['input'], nargs='?')
     parser.add_argument('-gs', '--get_password_from_section', type=str, nargs=2, help='')
     parser.add_argument('-as', '--all_sections', action='store_true', help=HELP_TEXT['all_sections'])
-    parser.add_argument('-s', '--print_section', type=str, help=HELP_TEXT['section'])
+    parser.add_argument('-s', '--section', type=str, help=HELP_TEXT['section'])
     parser.add_argument('-r', '--generate_random_pw', action='store_true', help=HELP_TEXT['generate_random_pw'])
     parser.add_argument('-n', '--add_new_password', type=str, help=HELP_TEXT['add_new_password'])
     parser.add_argument('-u', '--username', type=str)

@@ -35,7 +35,7 @@ HELP_TEXT = {
 }
 
 
-def main():
+def parse_args():
     parser = argparse.ArgumentParser(description='Manage your passwords from the terminal.')
     parser.add_argument('input', type=str, help=HELP_TEXT['input'], nargs='?')
     parser.add_argument('-gs', '--get_password_from_section', type=str, nargs=2, help='')
@@ -48,7 +48,11 @@ def main():
     parser.add_argument('-d', '--delete', type=str, help=HELP_TEXT['delete'])
 
     args = parser.parse_args()
+    return args
 
+
+def main(parsed_args):
+    args = parsed_args
     pw = pw_client.PasswordClient(CREDS_DIR, CREDS_FILE_PATH)
 
     if args.get_password_from_section:
@@ -83,4 +87,5 @@ def main():
 
 
 if __name__ == '__main__':
-    main()
+    args = parse_args()
+    main(args)

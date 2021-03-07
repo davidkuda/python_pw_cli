@@ -57,7 +57,6 @@ class PasswordClient:
         print(pw)
         print('It has been copied into your clipboard.')
 
-
     def save_dict_to_file(self):
         with open(self.creds_file_path, 'w') as pw_file_json:
             json.dump(self.pw_dict, pw_file_json)
@@ -94,17 +93,6 @@ class PasswordClient:
 
         self.pw_dict[section].update(new_password)
         self.save_dict_to_file()
-
-    @staticmethod
-    def validate_user_input(args, num=1, response_msg='Pass an arg after pw'):
-        """Validate if user has passed the correct number of args with the command."""
-        try:
-            args[num]
-        except IndexError:
-            sys.excepthook = pw_utils.my_exchandler
-            raise IndexError(response_msg)
-        else:
-            pass
 
     def open_pw_file(pw_file_path, app: str = 'Sublime'):
         """Open pw file with an app (default: Sublime)."""

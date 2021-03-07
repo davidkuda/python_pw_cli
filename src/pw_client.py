@@ -94,6 +94,14 @@ class PasswordClient:
         self.pw_dict[section].update(new_password)
         self.save_dict_to_file()
 
+    def remove_password(self, entity: str, section: str = None) -> None:
+        """Removes a password from the creds.json file."""
+        section = section or 'main'
+        self.pw_dict[section].pop(entity)
+        self.save_dict_to_file()
+        print(f'Deleted {entity} from {section}')
+        print('')
+
     def open_pw_file(pw_file_path, app: str = 'Sublime'):
         """Open pw file with an app (default: Sublime)."""
         pass

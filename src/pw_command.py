@@ -69,6 +69,9 @@ def main(parsed_args):
         # TODO: Write a function in pw_client.py that deletes a password.
         pass
 
+    if args.remove_password:
+        return pw.remove_password(entity=args.remove_password, section=args.section)
+
     if args.section and args.input:
         return pw.get_pw(args.input, args.section)
 

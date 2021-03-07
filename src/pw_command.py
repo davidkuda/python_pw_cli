@@ -77,11 +77,7 @@ def main(parsed_args):
 
     if args.generate_random_pw:
         random_pw = pw.generate_random_password()
-        print('Here is your random password:')
-        print(random_pw)
-        print('It has been copied into your clipboard.')
-        pyperclip.copy(random_pw)
-        return
+        return pw.copy_and_print_pw(random_pw)
 
     if args.input is None:
         return print('Nothing happened. No flags used. No args passed after pw command.')

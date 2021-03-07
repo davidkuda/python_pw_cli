@@ -50,6 +50,14 @@ class PasswordClient:
         random_password = ''.join(random.choice(characters) for i in range(42))
         return random_password
 
+    @staticmethod
+    def copy_and_print_pw(pw):
+        pyperclip.copy(pw)
+        print('Here is your random password:')
+        print(pw)
+        print('It has been copied into your clipboard.')
+
+
     def save_dict_to_file(self):
         with open(self.creds_file_path, 'w') as pw_file_json:
             json.dump(self.pw_dict, pw_file_json)

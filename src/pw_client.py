@@ -62,8 +62,10 @@ class PasswordClient:
             json.dump(self.pw_dict, pw_file_json)
 
     def add_new_pw(self, entity: str, password: str = None, username: str = None,
-                   website: str = None, section: 'str' = 'main') -> None:
+                   website: str = None, section: 'str' = None) -> None:
         """Adds a new password to the password file.
+
+        If the a password already exists in the creds.json file, this method will update it.
 
         Args:
             entity (str): The entity that you need the password for, e.g. "GitHub"
@@ -75,6 +77,9 @@ class PasswordClient:
               password will be added to. Defaults to the section "main".
         """
         self.create_backup()
+
+        if section is None:
+            section = 'main'
 
         if password is None:
             password = self.generate_random_password()

@@ -63,7 +63,8 @@ def main(parsed_args):
         return pw.print_sections()
 
     if args.add_new_password:
-        return pw.add_new_pw(entity=args.add_new_password, username=args.username, website=args.website)
+        return pw.add_new_pw(entity=args.add_new_password, username=args.username,
+                             website=args.website, section=args.section)
 
     if args.remove_password:
         # TODO: Write a function in pw_client.py that deletes a password.

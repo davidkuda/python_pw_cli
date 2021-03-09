@@ -23,12 +23,23 @@ class PasswordClient:
         for key in self.pw_dict[section_name].keys():
             print(key)
 
-    def get_pw(self, pw_key: str, section: str = 'main'):
-        """Access a dictionary's data (pws[section][pw_key]) and copy value to clipboard."""
-        pw_info = self.pw_dict[section][pw_key]
-        pyperclip.copy(pw_info['password'])
+    def get_pw(self, entity: str, attribute: str = None, section: str = None) -> None:
+        """Get data from self.pw_dict, copy to clipboard and print to console.
 
-        print(f'Copied password for "{pw_key}" into your clipboard.')
+        Args:
+            entity (str): The name of the holder of the password, e.g. "GitHub".
+            attribute (str, optional): Defaults to "password". Adjust if you want to retrieve "username" or "website".
+            section (str, optional): Defaults to "main". Adjust if you want to access data from an other section.
+        """
+        if attribute is None:
+            attribute = 'password'
+        if section is None:
+            section = 'main'
+
+        pw_info = self.pw_dict[section][entity]
+        pyperclip.copy(pw_info[attribute])
+
+        print(f'Copied {attribute} for "{entity}" into your clipboard.')
         for k, v in pw_info.items():
             print(f'  {k}: {v}')
         print('')

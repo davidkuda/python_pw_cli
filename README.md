@@ -1,6 +1,6 @@
 # Get passwords into your clipboard from the terminal.
 
-![Two sample commands](documentation/images/zalando_cli.png)
+![Preview of the pw tool](documentation/pw_tool_gif.gif)
 
 ### Features: 
 

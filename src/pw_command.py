@@ -76,7 +76,7 @@ def main(parsed_args):
         return pw.remove_password(entity=args.remove_password, section=args.section)
 
     if args.section and args.input:
-        return pw.get_pw(args.input, args.section)
+        return pw.get_pw(entity=args.input, section=args.section)
 
     if args.section:
         return pw.print_keys_of_section(args.section)

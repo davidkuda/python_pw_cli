@@ -72,7 +72,7 @@ Furthermore, you need to assure two things:
 
 - Encrypt / Decrypt creds file
 - Copy username into clipboard
-- Check what additional information is available on the service
+- Check what additional information is avaiilable on the service
 - Find a better name for "entity"
 - Remove a password
 - Updating a password is possible, but it's not yet explained anywhere. Creating a new password will 
@@ -81,3 +81,10 @@ Furthermore, you need to assure two things:
   to be less complex and easier to read?
 - Tab auto completion. How can I read available keys so that I could autocomplete them?
 - Expose functionalities with an API so that I can access my passwords from my mobile phone
+- Use a logger instead of prints
+- Add a new section
+- Add a new section if not exists when adding a new password
+- Delete sections
+- Test mongoDB
+- How to store Credit Card Information?
+- Add a function that allows me to change the password, username or website individually

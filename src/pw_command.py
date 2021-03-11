@@ -16,9 +16,9 @@ The creds.json file should look like this:
     }
 """
 import argparse
+
 from pw_config import CREDS_DIR, CREDS_FILE_PATH
 import pw_client
-import pyperclip
 
 HELP_TEXT = {
     'input': 'Name of entity that holds the password.',

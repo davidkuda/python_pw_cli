@@ -36,7 +36,8 @@ HELP_TEXT = {
         '''Delete a password from the creds file. Combine together with "-s" 
         if the password you want to delete is in an other section than "main".
         Example: "pw -d GitHub -s dev" -> Remove the password for GitHub
-        from the section "dev".'''
+        from the section "dev".''',
+    'set_password': 'Set your own password instead of generating a random password. Use it with "-n".'
 }
 
 
@@ -49,6 +50,7 @@ def parse_args():
     parser.add_argument('-n', '--add_new_password', type=str, help=HELP_TEXT['add_new_password'])
     parser.add_argument('-u', '--username', type=str)
     parser.add_argument('-w', '--website', type=str)
+    parser.add_argument('-pw', '--set_password', type=str, help=HELP_TEXT['set_password'])
     parser.add_argument('-rm', '--remove_password', type=str, help=HELP_TEXT['remove'])
 
     args = parser.parse_args()
@@ -64,7 +66,8 @@ def main(parsed_args):
 
     if args.add_new_password:
         return pw.add_new_pw(entity=args.add_new_password, username=args.username,
-                             website=args.website, section=args.section)
+                             website=args.website, section=args.section,
+                             password=args.set_password)
 
     if args.username:
         return pw.get_pw(args.username, 'username', args.section)

@@ -120,13 +120,13 @@ class PasswordClient:
 
     def open_pw_file(pw_file_path, app: str = 'Sublime'):
         """Open pw file with an app (default: Sublime)."""
-        pass
+        raise NotImplementedError
 
     def decrypt(pw_file_path):
         """Decrypt pw file."""
-        pass
+        raise NotImplementedError
 
     def encrypt(pw_file_path):
         """Encrypt pw file."""
-        pass
+        raise NotImplementedError
 

@@ -92,6 +92,9 @@ class PasswordClient:
         if section is None:
             section = 'main'
 
+        if not self.check_existence_of_section(section):
+            self.create_section(section)
+
         if password is None:
             password = self.generate_random_password()
         pyperclip.copy(password)
@@ -101,7 +104,7 @@ class PasswordClient:
         new_password[entity]['username'] = username if username else 'not specified'
         new_password[entity]['website'] = website if website else 'not specified'
 
-        print(f'Created new password for {entity}.')
+        print(f'Created new password for "{entity}".')
         print('Saved your new password to your creds file.')
         for k, v in new_password[entity].items():
             print(f'  {k}: {v}')
@@ -109,6 +112,18 @@ class PasswordClient:
 
         self.pw_dict[section].update(new_password)
         self.save_dict_to_file()
+
+    def create_section(self, section_name: str) -> None:
+        """Creates a new section."""
+        if self.check_existence_of_section(section_name):
+            return print(f'Section {section_name} exists already.')
+        self.pw_dict[section_name] = {}
+        self.save_dict_to_file()
+        print(f'Created a new section: "{section_name}".')
+
+    def check_existence_of_section(self, section: str):
+        if section in self.pw_dict:
+            return True
 
     def remove_section(self, section):
         self.pw_dict.pop(section)

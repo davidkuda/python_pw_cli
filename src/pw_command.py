@@ -86,7 +86,10 @@ def main(parsed_args):
         return pw.get_pw(entity=args.input, section=args.section)
 
     if args.section:
-        return pw.print_keys_of_section(args.section)
+        try:
+            return pw.print_keys_of_section(args.section)
+        except KeyError:
+            return pw.create_section(args.section)
 
     if args.generate_random_pw:
         random_pw = pw.generate_random_password()

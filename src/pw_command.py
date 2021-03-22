@@ -52,6 +52,7 @@ def parse_args():
     parser.add_argument('-w', '--website', type=str)
     parser.add_argument('-pw', '--set_password', type=str, help=HELP_TEXT['set_password'])
     parser.add_argument('-rm', '--remove_password', type=str, help=HELP_TEXT['remove'])
+    parser.add_argument('-rms', '--remove_section', type=str, help=HELP_TEXT['remove'])
 
     args = parser.parse_args()
     return args
@@ -77,6 +78,9 @@ def main(parsed_args):
 
     if args.remove_password:
         return pw.remove_password(entity=args.remove_password, section=args.section)
+
+    if args.remove_section:
+        return pw.remove_section(args.remove_section)
 
     if args.section and args.input:
         return pw.get_pw(entity=args.input, section=args.section)

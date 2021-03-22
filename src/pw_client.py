@@ -110,6 +110,11 @@ class PasswordClient:
         self.pw_dict[section].update(new_password)
         self.save_dict_to_file()
 
+    def remove_section(self, section):
+        self.pw_dict.pop(section)
+        self.save_dict_to_file()
+        print(f'Removed Section: "{section}"')
+
     def remove_password(self, entity: str, section: str = None) -> None:
         """Removes a password from the creds.json file."""
         section = section or 'main'

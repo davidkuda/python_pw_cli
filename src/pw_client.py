@@ -144,11 +144,3 @@ class PasswordClient:
         """Open pw file with an app (default: Sublime)."""
         raise NotImplementedError
 
-    def decrypt(pw_file_path):
-        """Decrypt pw file."""
-        raise NotImplementedError
-
-    def encrypt(pw_file_path):
-        """Encrypt pw file."""
-        raise NotImplementedError
-

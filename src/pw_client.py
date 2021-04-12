@@ -1,10 +1,12 @@
-import pw_utils
+import sys
 import json
 import string
 import random
 import datetime
+
 import pyperclip
-import sys
+
+import pw_utils
 
 
 class PasswordClient:

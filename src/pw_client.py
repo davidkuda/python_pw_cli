@@ -179,3 +179,10 @@ class PasswordClient:
                 manipulated_password = crypto(current_password)
                 v["password"] = manipulated_password
         self.save_dict_to_file()
+
+    def encrypt_all_passwords(self):
+        self.create_backup()
+        self.manipulate_passwords(self.crypto.encrypt)
+
+    def decrypt_all_passwords(self):
+        self.manipulate_passwords(self.crypto.decrypt)

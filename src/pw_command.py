@@ -101,17 +101,6 @@ def main(parsed_args):
     return pw.get_pw(args.input)
 
 
-def encrypt_all_passwords():
-    pw = pw_client.PasswordClient(CREDS_DIR, CREDS_FILE_PATH)
-    pw.create_backup()
-    pw.manipulate_passwords(pw.crypto.encrypt)
-
-
-def decrypt_all_passwords():
-    pw = pw_client.PasswordClient(CREDS_DIR, CREDS_FILE_PATH)
-    pw.manipulate_passwords(pw.crypto.decrypt)
-
-
 if __name__ == '__main__':
     args = parse_args()
     main(args)

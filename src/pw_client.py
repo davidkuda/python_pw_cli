@@ -29,13 +29,16 @@ class PasswordClient:
         for key in self.pw_dict[section_name].keys():
             print(key)
 
-    def get_pw(self, entity: str, attribute: str = None, section: str = None) -> None:
+    def get_pw(self, entity: str, attribute: str = None, section: str = None,
+               decryption: bool = True) -> None:
         """Get data from self.pw_dict, copy to clipboard and print to console.
 
         Args:
             entity (str): The name of the holder of the password, e.g. "GitHub".
             attribute (str, optional): Defaults to "password". Adjust if you want to retrieve "username" or "website".
             section (str, optional): Defaults to "main". Adjust if you want to access data from an other section.
+            decryption (bool, defaults to True):
+              If set to True this function will decrypt the password before copying it to the clipboard.
         """
         if attribute is None:
             attribute = 'password'
@@ -43,6 +46,10 @@ class PasswordClient:
             section = 'main'
 
         pw_info = self.pw_dict[section][entity]
+
+        if decryption is True and attribute == 'password':
+            pw_info[attribute] = self.crypto.decrypt(pw_info[attribute])
+
         pyperclip.copy(pw_info[attribute])
 
         print(f'Copied {attribute} for "{entity}" into your clipboard.')
@@ -79,7 +86,8 @@ class PasswordClient:
             json.dump(self.pw_dict, pw_file_json)
 
     def add_new_pw(self, entity: str, password: str = None, username: str = None,
-                   website: str = None, section: 'str' = None) -> None:
+                   website: str = None, section: 'str' = None,
+                   encryption: bool = True) -> None:
         """Adds a new password to the password file.
 
         If the a password already exists in the creds.json file, this method will update it.
@@ -92,6 +100,9 @@ class PasswordClient:
             website (str, optional): Pass a website if you want to add it to the json file.
             section (str, optional): You may set the section of the json file to which this
               password will be added to. Defaults to the section "main".
+            encryption (bool, defaults to True):
+              If true this function will decrypt the password before saving it. The function
+              will save the password without encryption if this arg is set to false.
         """
         self.create_backup()
 
@@ -104,6 +115,9 @@ class PasswordClient:
         if password is None:
             password = self.generate_random_password()
         pyperclip.copy(password)
+
+        if encryption:
+            password = self.crypto.encrypt(password)
 
         new_password = {entity: {}}
         new_password[entity]['password'] = password

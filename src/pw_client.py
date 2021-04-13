@@ -53,8 +53,6 @@ class PasswordClient:
         pyperclip.copy(pw_info[attribute])
 
         print(f'Copied {attribute} for "{entity}" into your clipboard.')
-        for k, v in pw_info.items():
-            print(f'  {k}: {v}')
         print('')
 
     def create_backup(self):
@@ -80,6 +78,7 @@ class PasswordClient:
         print('Here is your random password:')
         print(pw)
         print('It has been copied into your clipboard.')
+        print('')
 
     def save_dict_to_file(self):
         with open(self.creds_file_path, 'w') as pw_file_json:
@@ -125,9 +124,6 @@ class PasswordClient:
         new_password[entity]['website'] = website if website else 'not specified'
 
         print(f'Created new password for "{entity}".')
-        print('Saved your new password to your creds file.')
-        for k, v in new_password[entity].items():
-            print(f'  {k}: {v}')
         print('')
 
         self.pw_dict[section].update(new_password)

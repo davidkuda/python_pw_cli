@@ -1,4 +1,4 @@
-#!/usr/local/bin/python3
+#!/Users/david/miniforge3/bin/python3
 """
 Execute this command to get pw from json into clipboard.
 Type "pw -h" to get help on all available commands.

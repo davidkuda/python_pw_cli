@@ -7,6 +7,8 @@ import datetime
 import pyperclip
 
 import pw_utils
+from pw_encryption import SynchronousEncryption
+from pw_config import ENCRYPTION_KEY
 
 
 class PasswordClient:
@@ -14,6 +16,7 @@ class PasswordClient:
         self.creds_dir = creds_dir
         self.creds_file_path = creds_file_path
         self.pw_dict = pw_utils.get_pws_from_json_file(creds_file_path)
+        self.crypto = SynchronousEncryption(ENCRYPTION_KEY)
 
     def print_sections(self):
         """Print all keys of a dictionary (depth -> 1)."""

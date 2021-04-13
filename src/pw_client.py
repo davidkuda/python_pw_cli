@@ -35,10 +35,15 @@ class PasswordClient:
 
         Args:
             entity (str): The name of the holder of the password, e.g. "GitHub".
-            attribute (str, optional): Defaults to "password". Adjust if you want to retrieve "username" or "website".
-            section (str, optional): Defaults to "main". Adjust if you want to access data from an other section.
+            attribute (str, optional):
+              Defaults to "password". Adjust if you want to retrieve "username"
+              or "website".
+            section (str, optional):
+              Defaults to "main". Adjust if you want to access data from an
+              other section.
             decryption (bool, defaults to True):
-              If set to True this function will decrypt the password before copying it to the clipboard.
+              If set to True this function will decrypt the password before
+              copying it to the clipboard.
         """
         if attribute is None:
             attribute = 'password'

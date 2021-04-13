@@ -64,7 +64,7 @@ class PasswordClient:
         """Create a backup of the dictionary with the passwords."""
         now = datetime.datetime.now().isoformat()
         pretty_now = now.split('.')[0].replace(':', '.')
-        with open(f'{self.creds_dir}/backups/{pretty_now}', 'w') as pw_file_json:
+        with open(f'{self.creds_dir}/.backups/{pretty_now}', 'w') as pw_file_json:
             json.dump(self.pw_dict, pw_file_json)
 
     @staticmethod

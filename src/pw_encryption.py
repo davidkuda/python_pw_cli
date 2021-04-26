@@ -5,13 +5,13 @@ class SynchronousEncryption:
     def __init__(self, encryption_key):
         self.cipher = Fernet(encryption_key)
 
-    def encrypt(self, text: str):
+    def encrypt(self, text: str) -> str:
         encrypted_text = self.cipher.encrypt(text.encode('utf-8'))
-        return encrypted_text
+        return encrypted_text.decode('utf-8')
 
-    def decrypt(self, encrypted_text: bytes):
+    def decrypt(self, encrypted_text: str) -> str:
         """Decrypt an encrypted text."""
-        decrypted_text = self.cipher.decrypt(encrypted_text)
+        decrypted_text = self.cipher.decrypt(encrypted_text.encode('utf-8'))
         return decrypted_text.decode()
 
     @staticmethod

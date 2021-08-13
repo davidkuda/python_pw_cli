@@ -68,13 +68,14 @@ class PasswordClient:
             json.dump(self.pw_dict, pw_file_json)
 
     @staticmethod
-    def generate_random_password(special_characters=True):
-        """Generates a random password with 42 characters of any type (letters, digits, special characters)."""
+    def generate_random_password(special_characters=True,
+                                 password_length: int = 42) -> str:
+        """Generates a random password and returns it as a string."""
         digits = string.digits
         letters = string.ascii_letters
         punctuation = r"!#$%&()*+:,-./;<=>?@[]^_{|}~" if special_characters else None
         characters = digits + letters + punctuation
-        random_password = ''.join(random.choice(characters) for i in range(42))
+        random_password = ''.join(random.choice(characters) for i in range(password_length))
         return random_password
 
     @staticmethod

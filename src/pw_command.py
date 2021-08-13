@@ -92,7 +92,10 @@ def main(parsed_args):
             return pw.create_section(args.section)
 
     if args.generate_random_pw:
-        random_pw = pw.generate_random_password()
+        if args.input is not None:
+            random_pw = pw.generate_random_password(password_length=int(args.input))
+        else:
+            random_pw = pw.generate_random_password()
         return pw.copy_and_print_pw(random_pw)
 
     if args.input is None:

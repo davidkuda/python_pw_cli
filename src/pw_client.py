@@ -17,20 +17,10 @@ class PasswordClient:
         self.creds_dir = creds_dir
         self.creds_file_path = creds_file_path
         self.pw_dict = pw_utils.get_pws_from_json_file(creds_file_path)
+        # TODO: Move crypto to the command
         self.crypto = SynchronousEncryption(ENCRYPTION_KEY)
 
-    def print_sections(self):
-        """Print all keys of a dictionary (depth -> 1)."""
-        for key in self.pw_dict.keys():
-            print(key)
-
-    def print_keys_of_section(self, section_name):
-        """Output all available keys of a section to the console."""
-        for key in self.pw_dict[section_name].keys():
-            print(key)
-
-    def get_pw(self, entity: str, attribute: str = None, section: str = None,
-               decryption: bool = True) -> None:
+    def get_pw(self, entity: str, attribute: str = None, section: str = None) -> dict:
         """Get data from self.pw_dict, copy to clipboard and print to console.
 
         Args:
@@ -41,31 +31,13 @@ class PasswordClient:
             section (str, optional):
               Defaults to "main". Adjust if you want to access data from an
               other section.
-            decryption (bool, defaults to True):
-              If set to True this function will decrypt the password before
-              copying it to the clipboard.
         """
         if attribute is None:
             attribute = 'password'
         if section is None:
             section = 'main'
-
-        pw_info = self.pw_dict[section][entity]
-
-        if decryption is True and attribute == 'password':
-            pw_info[attribute] = self.crypto.decrypt(pw_info[attribute])
-
-        pyperclip.copy(pw_info[attribute])
-
-        print(f'Copied {attribute} for "{entity}" into your clipboard.')
-        print('')
-
-    def create_backup(self):
-        """Create a backup of the dictionary with the passwords."""
-        now = datetime.datetime.now().isoformat()
-        pretty_now = now.split('.')[0].replace(':', '.')
-        with open(f'{self.creds_dir}/.backups/{pretty_now}', 'w') as pw_file_json:
-            json.dump(self.pw_dict, pw_file_json)
+        pw_data = self.pw_dict[section][entity]
+        return pw_data
 
     @staticmethod
     def generate_random_password(special_characters=True,
@@ -77,18 +49,6 @@ class PasswordClient:
         characters = digits + letters + punctuation
         random_password = ''.join(random.choice(characters) for i in range(password_length))
         return random_password
-
-    @staticmethod
-    def copy_and_print_pw(pw):
-        pyperclip.copy(pw)
-        print('Here is your random password:')
-        print(pw)
-        print('It has been copied into your clipboard.')
-        print('')
-
-    def save_dict_to_file(self):
-        with open(self.creds_file_path, 'w') as pw_file_json:
-            json.dump(self.pw_dict, pw_file_json)
 
     def add_new_pw(self, entity: str, password: str = None, username: str = None,
                    website: str = None, section: 'str' = None,
@@ -135,6 +95,17 @@ class PasswordClient:
         self.pw_dict[section].update(new_password)
         self.save_dict_to_file()
 
+    def create_backup(self):
+        """Create a backup of the dictionary with the passwords."""
+        now = datetime.datetime.now().isoformat()
+        pretty_now = now.split('.')[0].replace(':', '.')
+        with open(f'{self.creds_dir}/.backups/{pretty_now}', 'w') as pw_file_json:
+            json.dump(self.pw_dict, pw_file_json)
+
+    def save_dict_to_file(self):
+        with open(self.creds_file_path, 'w') as pw_file_json:
+            json.dump(self.pw_dict, pw_file_json)
+
     def create_section(self, section_name: str) -> None:
         """Creates a new section."""
         if self.check_existence_of_section(section_name):
@@ -142,6 +113,16 @@ class PasswordClient:
         self.pw_dict[section_name] = {}
         self.save_dict_to_file()
         print(f'Created a new section: "{section_name}".')
+
+    def print_sections(self):
+        """Print all keys of a dictionary (depth -> 1)."""
+        for key in self.pw_dict.keys():
+            print(key)
+
+    def print_keys_of_section(self, section_name):
+        """Output all available keys of a section to the console."""
+        for key in self.pw_dict[section_name].keys():
+            print(key)
 
     def check_existence_of_section(self, section: str):
         if section in self.pw_dict:
@@ -180,6 +161,9 @@ class PasswordClient:
                 manipulated_password = crypto(current_password)
                 v["password"] = manipulated_password
         self.save_dict_to_file()
+
+    def encrypt_single_string(self, text: str) -> str:
+        return self.crypto.encrypt(text)
 
     def encrypt_all_passwords(self):
         self.create_backup()

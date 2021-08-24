@@ -1,14 +1,10 @@
-import sys
 import json
 import string
 import random
 import datetime
 from typing import Callable
 
-import pyperclip
-
 import pw_utils
-from pw_encryption import SynchronousEncryption
 
 
 class PasswordClient:

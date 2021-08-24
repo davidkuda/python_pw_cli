@@ -71,20 +71,15 @@ Furthermore, you need to assure two things:
 ### Todo:
 
 - Encrypt / Decrypt creds file
-- Copy username into clipboard
-- Check what additional information is avaiilable on the service
-- Find a better name for "entity"
-- Remove a password
-- Updating a password is possible, but it's not yet explained anywhere. Creating a new password will 
-  update an existing password, if the key exists already.
-- Main has become a huge function with a lot of if statements. How can I refactor main() 
-  to be less complex and easier to read?
+- Main has become a huge function with a lot of if statements. How can I refactor main() to be less complex and easier to read? Maybe I could pass a callable / function directly to the arguments and avoid if/elsing again below?
 - Tab auto completion. How can I read available keys so that I could autocomplete them?
-- Expose functionalities with an API so that I can access my passwords from my mobile phone
+- Expose functionalities with an API so that I can access my passwords from my mobile phone -> Create a Flask client
 - Use a logger instead of prints
-- Add a new section
-- Add a new section if not exists when adding a new password
-- Delete sections
 - Test mongoDB
-- How to store Credit Card Information?
+- Update existing secrets data with additional kwargs without deleting / replacing existing dictionary
 - Add a function that allows me to change the password, username or website individually
+- Handle dependency -> Pyperclip is now installed globally. How can I hashbang a conda environment?
+- catch KeyError when entering a wrong entity
+- Search for a entities in every section
+- Move generate random pw to utils
+- Update help texts

@@ -1,31 +1,14 @@
 #!/opt/homebrew/Caskroom/miniconda/base/bin/python
-"""
-Execute this command to get pw from json into clipboard.
-Type "pw -h" to get help on all available commands.
-Basic usage: "pw <entity>" -> Gets password of entity from main section.
-
-The creds.json file should look like this:
-
-"section": {
-        "entity": {
-            "password": "lorem",
-            "username": "ipsum",
-            "additional_info": "...",
-            "website": "www.kuda.ai"
-        }
-    }
-"""
 import argparse
 
 import pyperclip
 
-from pw_config import CREDS_DIR, CREDS_FILE_PATH
+from pw_config import CREDS_DIR, CREDS_FILE_PATH, ENCRYPTION_KEY
 import pw_client
 from pw_encryption import SynchronousEncryption
-from pw_config import ENCRYPTION_KEY
 
 HELP_TEXT = {
-    'input': 'Name of entity that holds the password.',
+    'entity': 'Name of entity that holds the password.',
     'all_sections': 'Print all available sections.',
     'section':
         '''Pass a section to print all entities of that section.
@@ -45,17 +28,27 @@ HELP_TEXT = {
 }
 
 
+# TODO: Can I attach a callable / function directly to arg parse so
+# TODO: that I can avoid the exhaustingly long if / else statements below?
 def parse_args():
     parser = argparse.ArgumentParser(description='Manage your passwords from your terminal.')
-    parser.add_argument('input', type=str, help=HELP_TEXT['input'], nargs='?')
+    parser.add_argument('entity', type=str, help=HELP_TEXT['entity'], nargs='?')
+
+    parser.add_argument('-k', '--secret_key', type=str, default='password')
+    parser.add_argument('-ks', '--available_keys', action='store_true')
     parser.add_argument('-as', '--all_sections', action='store_true', help=HELP_TEXT['all_sections'])
     parser.add_argument('-s', '--section', type=str, help=HELP_TEXT['section'])
     parser.add_argument('-r', '--generate_random_pw', action='store_true', help=HELP_TEXT['generate_random_pw'])
-    parser.add_argument('-n', '--add_new_password', type=str, help=HELP_TEXT['add_new_password'])
+    parser.add_argument('-rl', '--random_password_length', type=int, default=42)
+
+    parser.add_argument('-n', '--new_secrets_data', type=str, help=HELP_TEXT['add_new_password'])
+    parser.add_argument('-pw', '--set_password', type=str, help=HELP_TEXT['set_password'])
     parser.add_argument('-u', '--username', type=str)
     parser.add_argument('-w', '--website', type=str)
-    parser.add_argument('-pw', '--set_password', type=str, help=HELP_TEXT['set_password'])
-    parser.add_argument('-rm', '--remove_password', type=str, help=HELP_TEXT['remove'])
+    parser.add_argument('--kwargs', '--keyword_arguments', type=str)
+    parser.add_argument('-ow', '--overwrite', action='store_true')
+
+    parser.add_argument('-rm', '--remove_entity', type=str, help=HELP_TEXT['remove'])
     parser.add_argument('-rms', '--remove_section', type=str, help=HELP_TEXT['remove'])
 
     args = parser.parse_args()
@@ -67,67 +60,88 @@ def main():
     crypto = SynchronousEncryption(ENCRYPTION_KEY)
     pw = pw_client.PasswordClient(CREDS_DIR, CREDS_FILE_PATH)
 
-    # TODO: Get data inside pw_command.py
-    # pw_data = pw.get_pw(???)
-
     if args.all_sections:
         return pw.print_sections()
 
-    if args.add_new_password:
+    if args.new_secrets_data:
+        secrets_data = {}
+
         if args.set_password:
-            encrypted_password = crypto.encrypt(args.set_password)
+            new_password = args.set_password
         else:
-            new_random_password = pw.generate_random_password()
-            encrypted_password = crypto.encrypt(new_random_password)
-        return pw.add_new_pw(entity=args.add_new_password, username=args.username,
-                             website=args.website, section=args.section,
-                             password=encrypted_password)
+            new_password = pw.generate_random_password(password_length=args.random_password_length)
+        encrypted_password = crypto.encrypt(new_password)
+        secrets_data['password'] = encrypted_password
 
-    if args.username:
-        decrypted_username = pw.get_pw(args.username, 'username', args.section)
-        encrypted_username = crypto.encrypt(decrypted_username)
-        return encrypted_username
+        if args.username:
+            encrypted_username = crypto.encrypt(args.username)
+            secrets_data['username'] = encrypted_username
 
-    if args.website:
-        return pw.get_pw(args.website, 'website', args.section)
+        if args.website:
+            encrypted_website = crypto.encrypt(args.website)
+            secrets_data['website'] = encrypted_website
 
-    if args.remove_password:
-        return pw.remove_password(entity=args.remove_password, section=args.section)
+        if args.kwargs:
+            kwargs_as_list = args.kwargs.split(',')
+            for kwarg in kwargs_as_list:
+                if len(kwarg.split('=')) > 2:
+                    print('There is something wrong with your kwargs ...')
+                    print('Desired format:')
+                    print('"pw --kwargs brand=fender,guitar=strat,string_gauge=0.10"')
+                    print('')
+                key, value = kwarg.split('=')
+                encrypted_value = crypto.encrypt(value)
+                secrets_data[key] = encrypted_value
+
+        pw.add_new_secrets_data(entity=args.new_secrets_data,
+                                secrets_data=secrets_data,
+                                section=args.section,
+                                overwrite=args.overwrite)
+
+        return True
+
+    if args.remove_entity:
+        return pw.remove_entity(entity=args.remove_entity, section=args.section)
 
     if args.remove_section:
         return pw.remove_section(args.remove_section)
 
-    if args.section and args.input:
-        encrypted_password = pw.get_pw(entity=args.input, section=args.section)
-        password = crypto.decrypt(encrypted_password)
-        return password
-
+    # TODO: Move logic of "create new section if not exists" to client
     if args.section:
         try:
             return pw.print_keys_of_section(args.section)
         except KeyError:
             return pw.create_section(args.section)
 
+    # TODO: Move function "generate_random_pw" from pw_client to utils
     if args.generate_random_pw:
-        if args.input is not None:
-            random_pw = pw.generate_random_password(password_length=int(args.input))
+        if args.entity is not None:
+            random_pw = pw.generate_random_password(password_length=args.random_password_length)
         else:
-            random_pw = pw.generate_random_password()
+            random_pw = pw.generate_random_password(password_length=args.random_password_length)
         pyperclip.copy(random_pw)
         print('The random password has been copied into your clipboard.')
         print('')
         return random_pw
 
-    if args.input is None:
-        return print('Nothing happened. No flags used. No args passed after pw command.')
+    if args.entity is None:
+        print('Nothing happened. No flags used. No args passed after pw command.')
+        return False
 
-    if args.input:
-        encrypted_password = pw.get_pw(args.input)
-        decrypted_password = crypto.decrypt(encrypted_password)
-        pyperclip.copy(decrypted_password)
-        print(f'Copied {attribute} for "{entity}" into your clipboard.')
+    secrets_data = pw.get_secrets_data(entity=args.entity, section=args.section)
+
+    if args.available_keys:
+        print(f'There are {len(secrets_data.keys())} available keys for {args.entity}:')
+        print(', '.join(secrets_data.keys()))
+        return True
+
+    if args.entity:
+        encrypted_secret_value = secrets_data[args.secret_key]
+        decrypted_secret_value = crypto.decrypt(encrypted_secret_value)
+        pyperclip.copy(decrypted_secret_value)
+        print(f'Copied {args.secret_key} for "{args.entity}" into your clipboard.')
         print('')
-        return encrypted_password
+        return True
 
 
 def decrypt_pw_file():
@@ -145,4 +159,3 @@ if __name__ == '__main__':
 
     # decrypt_pw_file()
     # encrypt_pw_file()
-

@@ -36,6 +36,7 @@ def parse_args():
 
     parser.add_argument('-k', '--secret_key', type=str, default='password')
     parser.add_argument('-ks', '--available_keys', action='store_true')
+    parser.add_argument('-f', '--full', action='store_true')
     parser.add_argument('-as', '--all_sections', action='store_true', help=HELP_TEXT['all_sections'])
     parser.add_argument('-s', '--section', type=str, help=HELP_TEXT['section'])
     parser.add_argument('-r', '--generate_random_pw', action='store_true', help=HELP_TEXT['generate_random_pw'])
@@ -133,6 +134,16 @@ def main():
     if args.available_keys:
         print(f'There are {len(secrets_data.keys())} available keys for {args.entity}:')
         print(', '.join(secrets_data.keys()))
+        return True
+
+    if args.full:
+        print('Here are the values:')
+        for key, value in secrets_data.items():
+            if key == 'password':
+                value = 'sensitive'
+            else:
+                value = crypto.decrypt(value)
+            print(f'    {key}: {value}')
         return True
 
     if args.entity:

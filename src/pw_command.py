@@ -107,7 +107,7 @@ def main():
         return pw.remove_section(args.remove_section)
 
     # TODO: Move logic of "create new section if not exists" to client
-    if args.section:
+    if args.section and not args.entity:
         try:
             return pw.print_keys_of_section(args.section)
         except KeyError:

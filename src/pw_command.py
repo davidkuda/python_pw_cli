@@ -34,9 +34,10 @@ def parse_args():
     parser = argparse.ArgumentParser(description='Manage your passwords from your terminal.')
     parser.add_argument('entity', type=str, help=HELP_TEXT['entity'], nargs='?')
 
+    parser.add_argument('-f', '--find', type=str)
     parser.add_argument('-k', '--secret_key', type=str, default='password')
     parser.add_argument('-ks', '--available_keys', action='store_true')
-    parser.add_argument('-f', '--full', action='store_true')
+    parser.add_argument('--full', action='store_true')
     parser.add_argument('-as', '--all_sections', action='store_true', help=HELP_TEXT['all_sections'])
     parser.add_argument('-s', '--section', type=str, help=HELP_TEXT['section'])
     parser.add_argument('-r', '--generate_random_pw', action='store_true', help=HELP_TEXT['generate_random_pw'])
@@ -63,6 +64,10 @@ def main():
 
     if args.all_sections:
         return pw.print_sections()
+
+    if args.find:
+        pw.find_key(args.find)
+        return True
 
     if args.new_secrets_data:
         secrets_data = {}

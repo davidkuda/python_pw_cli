@@ -29,6 +29,12 @@ class PasswordClient:
         secrets_data = self.pw_dict[section][entity]
         return secrets_data
 
+    def find_key(self, search_term):
+        for section, secrets in self.pw_dict.items():
+            for secret in secrets:
+                if search_term.lower() in secret.lower():
+                    print(f'Found "{secret}" in section "{section}".')
+
     # TODO: Move generate random pw to utils
     @staticmethod
     def generate_random_password(special_characters=True,

@@ -2,7 +2,7 @@ import json
 import string
 import random
 import datetime
-from typing import Callable
+from typing import Callable, List
 
 import pw_utils
 
@@ -29,11 +29,13 @@ class PasswordClient:
         secrets_data = self.pw_dict[section][entity]
         return secrets_data
 
-    def find_key(self, search_term):
+    def find_key(self, search_term: str) -> List[dict]:
+        """Iterate over all secrets and yield a secret's name that matches the search_term."""
         for section, secrets in self.pw_dict.items():
             for secret in secrets:
                 if search_term.lower() in secret.lower():
-                    print(f'Found "{secret}" in section "{section}".')
+                    yield {'entity': secret,
+                           'section': section}
 
     # TODO: Move generate random pw to utils
     @staticmethod

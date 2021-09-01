@@ -66,8 +66,17 @@ def main():
         return pw.print_sections()
 
     if args.find:
-        pw.find_key(args.find)
-        return True
+        results_as_generator = pw.find_key(args.find)
+        results = list(results_as_generator)
+        for result in results:
+            print(f'Found "{result["entity"]}" in section "{result["section"]}".')
+        if len(results) >= 1:
+            args.entity = results[0]['entity']
+            args.section = results[0]['section']
+        else:
+            print(f'No results found for the given search term "{args.find}"')
+            print('')
+            return True
 
     if args.new_secrets_data:
         secrets_data = {}

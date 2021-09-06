@@ -95,6 +95,7 @@ def main():
         else:
             new_password = pw.generate_random_password(password_length=args.random_password_length,
                                                        special_characters=args.no_special_characters)
+        pyperclip.copy(new_password)
         encrypted_password = crypto.encrypt(new_password)
         secrets_data['password'] = encrypted_password
 

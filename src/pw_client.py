@@ -144,19 +144,3 @@ class PasswordClient:
         """Open pw file with an app (default: Sublime)."""
         raise NotImplementedError
 
-    def manipulate_passwords(self, crypto: Callable = None) -> None:
-        """Iterate over all passwords and manipulate them.
-
-        You can apply encryption or decryption by passing the corresponding
-         processor as an argument.
-
-        Args:
-            crypto (Callable): Pass for instance "self.crypto.encrypt" to
-              encrypt all passwords.
-        """
-        for section, entities in self.pw_dict.items():
-            for entity, v in entities.items():
-                current_password = v.get("password")
-                manipulated_password = crypto(current_password)
-                v["password"] = manipulated_password
-        self.save_dict_to_file()

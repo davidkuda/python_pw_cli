@@ -189,18 +189,5 @@ def main():
         return True
 
 
-def decrypt_pw_file():
-    pw = pw_client.PasswordClient(CREDS_DIR, CREDS_FILE_PATH)
-    return pw.decrypt_all_passwords()
-
-
-def encrypt_pw_file():
-    pw = pw_client.PasswordClient(CREDS_DIR, CREDS_FILE_PATH)
-    return pw.encrypt_all_passwords()
-
-
 if __name__ == '__main__':
     main()
-
-    # decrypt_pw_file()
-    # encrypt_pw_file()

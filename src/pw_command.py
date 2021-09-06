@@ -1,5 +1,6 @@
 #!/opt/homebrew/Caskroom/miniconda/base/bin/python
 import argparse
+from pprint import pprint
 
 import pyperclip
 
@@ -34,6 +35,8 @@ def parse_args():
     parser = argparse.ArgumentParser(description='Manage your passwords from your terminal.')
     parser.add_argument('entity', type=str, help=HELP_TEXT['entity'], nargs='?')
 
+    parser.add_argument('-d', '--debug', action='store_true')
+
     parser.add_argument('-f', '--find', type=str)
     parser.add_argument('-k', '--secret_key', type=str, default='password')
     parser.add_argument('-ks', '--available_keys', action='store_true')
@@ -63,6 +66,10 @@ def main():
     args = parse_args()
     crypto = SynchronousEncryption(ENCRYPTION_KEY)
     pw = pw_client.PasswordClient(CREDS_DIR, CREDS_FILE_PATH)
+
+    if args.debug:
+        pprint(args.__dict__)
+        print('')
 
     if args.all_sections:
         return pw.print_sections()

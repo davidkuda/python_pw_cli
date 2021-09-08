@@ -43,6 +43,96 @@ def parse_args():
     return args
 
 
+def add_new_secrets_data(pw, crypto, args):
+    secrets_data = {}
+
+    if args.set_password:
+        new_password = args.set_password
+    else:
+        new_password = pw.generate_random_password(password_length=args.random_password_length,
+                                                   special_characters=args.no_special_characters)
+    pyperclip.copy(new_password)
+    encrypted_password = crypto.encrypt(new_password)
+    secrets_data['password'] = encrypted_password
+
+    if args.username:
+        encrypted_username = crypto.encrypt(args.username)
+        secrets_data['username'] = encrypted_username
+
+    if args.website:
+        encrypted_website = crypto.encrypt(args.website)
+        secrets_data['website'] = encrypted_website
+
+    if args.kwargs:
+        kwargs_as_list = args.kwargs.split(',')
+        for kwarg in kwargs_as_list:
+            if len(kwarg.split('=')) > 2:
+                print('There is something wrong with your kwargs ...')
+                print('Desired format:')
+                print('"pw --kwargs brand=fender,guitar=strat,string_gauge=0.10"')
+                print('')
+            key, value = kwarg.split('=')
+            encrypted_value = crypto.encrypt(value)
+            secrets_data[key] = encrypted_value
+
+    pw.add_new_secrets_data(entity=args.new_secrets_data,
+                            secrets_data=secrets_data,
+                            section=args.section,
+                            overwrite=args.overwrite)
+
+    return True
+
+
+def find_secrets_data(pw, args):
+    results_as_generator = pw.find_key(args.find)
+    results = list(results_as_generator)
+    for result in results:
+        print(f'Found "{result["entity"]}" in section "{result["section"]}".')
+    if len(results) >= 1:
+        args.entity = results[0]['entity']
+        args.section = results[0]['section']
+        return True
+    else:
+        print(f'No results found for the given search term "{args.find}"')
+        print('')
+        return False
+
+
+def generate_random_pw(pw, args):
+    if args.entity is not None:
+        random_pw = pw.generate_random_password(password_length=args.random_password_length,
+                                                special_characters=args.no_special_characters)
+    else:
+        random_pw = pw.generate_random_password(password_length=args.random_password_length,
+                                                special_characters=args.no_special_characters)
+    pyperclip.copy(random_pw)
+    print('The random password has been copied into your clipboard.')
+    print('')
+    return True
+
+
+def print_secrets_data_values(secrets_data, crypto, args):
+    print(f'Here are the values for "{args.entity}":')
+    for key, value in secrets_data.items():
+        if key == 'password':
+            value = 'sensitive'
+        else:
+            value = crypto.decrypt(value)
+        print(f'    {key}: {value}')
+    print('')
+    # return True
+    # Do not return, so that you will copy pw to clipboard.
+
+
+def get_secrets_data_value(secrets_data, crypto, args):
+    encrypted_secret_value = secrets_data[args.secret_key]
+    decrypted_secret_value = crypto.decrypt(encrypted_secret_value)
+    pyperclip.copy(decrypted_secret_value)
+    print(f'Copied {args.secret_key} for "{args.entity}" into your clipboard.')
+    print('')
+    return True
+
+
 def main():
     args = parse_args()
     crypto = SynchronousEncryption(ENCRYPTION_KEY)
@@ -56,56 +146,12 @@ def main():
         return pw.print_sections()
 
     if args.find:
-        results_as_generator = pw.find_key(args.find)
-        results = list(results_as_generator)
-        for result in results:
-            print(f'Found "{result["entity"]}" in section "{result["section"]}".')
-        if len(results) >= 1:
-            args.entity = results[0]['entity']
-            args.section = results[0]['section']
-        else:
-            print(f'No results found for the given search term "{args.find}"')
-            print('')
-            return True
+        has_found = find_secrets_data(pw, args)
+        if has_found is False:
+            return
 
     if args.new_secrets_data:
-        secrets_data = {}
-
-        if args.set_password:
-            new_password = args.set_password
-        else:
-            new_password = pw.generate_random_password(password_length=args.random_password_length,
-                                                       special_characters=args.no_special_characters)
-        pyperclip.copy(new_password)
-        encrypted_password = crypto.encrypt(new_password)
-        secrets_data['password'] = encrypted_password
-
-        if args.username:
-            encrypted_username = crypto.encrypt(args.username)
-            secrets_data['username'] = encrypted_username
-
-        if args.website:
-            encrypted_website = crypto.encrypt(args.website)
-            secrets_data['website'] = encrypted_website
-
-        if args.kwargs:
-            kwargs_as_list = args.kwargs.split(',')
-            for kwarg in kwargs_as_list:
-                if len(kwarg.split('=')) > 2:
-                    print('There is something wrong with your kwargs ...')
-                    print('Desired format:')
-                    print('"pw --kwargs brand=fender,guitar=strat,string_gauge=0.10"')
-                    print('')
-                key, value = kwarg.split('=')
-                encrypted_value = crypto.encrypt(value)
-                secrets_data[key] = encrypted_value
-
-        pw.add_new_secrets_data(entity=args.new_secrets_data,
-                                secrets_data=secrets_data,
-                                section=args.section,
-                                overwrite=args.overwrite)
-
-        return True
+        return add_new_secrets_data(pw, crypto, args)
 
     if args.remove_entity:
         return pw.remove_entity(entity=args.remove_entity, section=args.section)
@@ -135,16 +181,7 @@ def main():
 
     # TODO: Move function "generate_random_pw" from pw_client to utils
     if args.generate_random_pw:
-        if args.entity is not None:
-            random_pw = pw.generate_random_password(password_length=args.random_password_length,
-                                                    special_characters=args.no_special_characters)
-        else:
-            random_pw = pw.generate_random_password(password_length=args.random_password_length,
-                                                    special_characters=args.no_special_characters)
-        pyperclip.copy(random_pw)
-        print('The random password has been copied into your clipboard.')
-        print('')
-        return True
+        generate_random_pw(pw, args)
 
     if args.entity is None:
         print('Nothing happened. No flags used. No args passed after pw command.')
@@ -158,24 +195,10 @@ def main():
         return True
 
     if args.expressive:
-        print(f'Here are the values for "{args.entity}":')
-        for key, value in secrets_data.items():
-            if key == 'password':
-                value = 'sensitive'
-            else:
-                value = crypto.decrypt(value)
-            print(f'    {key}: {value}')
-        print('')
-        # return True
-        # Do not return, so that you will copy pw to clipboard.
+        print_secrets_data_values(secrets_data, crypto, args)
 
     if args.entity:
-        encrypted_secret_value = secrets_data[args.secret_key]
-        decrypted_secret_value = crypto.decrypt(encrypted_secret_value)
-        pyperclip.copy(decrypted_secret_value)
-        print(f'Copied {args.secret_key} for "{args.entity}" into your clipboard.')
-        print('')
-        return True
+        return get_secrets_data_value(secrets_data, crypto, args)
 
 
 if __name__ == '__main__':

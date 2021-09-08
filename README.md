@@ -1,6 +1,6 @@
 # Get passwords into your clipboard from the terminal.
 
-![Preview of the pw tool](documentation/pw_tool_gif.gif)
+![Preview of the pw tool](documentation/pw_v0.2.gif)
 
 ### Features: 
 
@@ -83,3 +83,4 @@ Furthermore, you need to assure two things:
 - Search for a entities in every section
 - Move generate random pw to utils
 - Update help texts
+- Encrypt everything and not just the password. But also username, website, kwargs, etc. 

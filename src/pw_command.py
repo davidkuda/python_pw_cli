@@ -7,33 +7,14 @@ import pyperclip
 from pw_config import CREDS_DIR, CREDS_FILE_PATH, ENCRYPTION_KEY
 import pw_client
 from pw_encryption import SynchronousEncryption
-
-HELP_TEXT = {
-    'entity': 'Name of entity that holds the password.',
-    'all_sections': 'Print all available sections.',
-    'section':
-        '''Pass a section to print all entities of that section.
-        The -s flag can be used together with other functions:
-          Use it with "-add_new_password" to write pw to a specific section:
-            "pw -n GitHub -s dev" -- Writes a new random password for "GitHub" to the section "dev";
-          Use it with an argument without a flag to get a password from a specific section:
-            "pw -s dev GitHub" -- Gets password for "GitHub" from the section "dev"''',
-    'add_new_password': 'Pass an entity as arg and add a new password to the json file.',
-    'generate_random_pw': 'Print a randomly generated password and add it to your clipboard.',
-    'remove':
-        '''Delete a password from the creds file. Combine together with "-s" 
-        if the password you want to delete is in an other section than "main".
-        Example: "pw -d GitHub -s dev" -> Remove the password for GitHub
-        from the section "dev".''',
-    'set_password': 'Set your own password instead of generating a random password. Use it with "-n".'
-}
+from utils import arg_help_texts as h
 
 
 # TODO: Can I attach a callable / function directly to arg parse so
-# TODO: that I can avoid the exhaustingly long if / else statements below?
+# TODO: that I can avoid the long if / else statements below?
 def parse_args():
     parser = argparse.ArgumentParser(description='Manage your passwords from your terminal.')
-    parser.add_argument('entity', type=str, help=HELP_TEXT['entity'], nargs='?')
+    parser.add_argument('entity', type=str, help=h.entity, nargs='?')
 
     parser.add_argument('-d', '--debug', action='store_true')
 
@@ -41,22 +22,22 @@ def parse_args():
     parser.add_argument('-k', '--secret_key', type=str, default='password')
     parser.add_argument('-ks', '--available_keys', action='store_true')
     parser.add_argument('-e', '--expressive', action='store_true')
-    parser.add_argument('-as', '--all_sections', action='store_true', help=HELP_TEXT['all_sections'])
-    parser.add_argument('-s', '--section', type=str, help=HELP_TEXT['section'])
+    parser.add_argument('-as', '--all_sections', action='store_true', help=h.all_sections)
+    parser.add_argument('-s', '--section', type=str, help=h.section)
 
-    parser.add_argument('-r', '--generate_random_pw', action='store_true', help=HELP_TEXT['generate_random_pw'])
+    parser.add_argument('-r', '--generate_random_pw', action='store_true', help=h.generate_random_pw)
     parser.add_argument('-rl', '--random_password_length', type=int, default=42)
     parser.add_argument('-rn', '--no_special_characters', action='store_false')
 
-    parser.add_argument('-n', '--new_secrets_data', type=str, help=HELP_TEXT['add_new_password'])
-    parser.add_argument('-pw', '--set_password', type=str, help=HELP_TEXT['set_password'])
+    parser.add_argument('-n', '--new_secrets_data', type=str, help=h.add_new_password)
+    parser.add_argument('-pw', '--set_password', type=str, help=h.set_password)
     parser.add_argument('-u', '--username', type=str)
     parser.add_argument('-w', '--website', type=str)
     parser.add_argument('--kwargs', '--keyword_arguments', type=str)
     parser.add_argument('-ow', '--overwrite', action='store_true')
 
-    parser.add_argument('-rm', '--remove_entity', type=str, help=HELP_TEXT['remove'])
-    parser.add_argument('-rms', '--remove_section', type=str, help=HELP_TEXT['remove'])
+    parser.add_argument('-rm', '--remove_entity', type=str, help=h.remove)
+    parser.add_argument('-rms', '--remove_section', type=str, help=h.remove)
 
     args = parser.parse_args()
     return args

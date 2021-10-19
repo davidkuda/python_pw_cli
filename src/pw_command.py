@@ -82,7 +82,7 @@ def main():
         return pw.get_secrets_data_value(secrets_data)
 
 # TODO: Can I attach a callable / function directly to arg parse so
-# TODO: that I can avoid the long if / else statements below?
+# TODO: that I can avoid the long if / else statements in "main()"?
 def parse_args():
     parser = argparse.ArgumentParser(description='Manage your passwords from your terminal.')
     parser.add_argument('entity', type=str, help=h.entity, nargs='?')

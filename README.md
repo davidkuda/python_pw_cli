@@ -70,6 +70,7 @@ Furthermore, you need to assure two things:
 
 ### Todo:
 
+- __Write Tests!__
 - Encrypt / Decrypt creds file
 - Main has become a huge function with a lot of if statements. How can I refactor main() to be less complex and easier to read? Maybe I could pass a callable / function directly to the arguments and avoid if/elsing again below?
 - Tab auto completion. How can I read available keys so that I could autocomplete them?

@@ -146,7 +146,7 @@ class PasswordCommand:
         if args.set_password:
             new_password = args.set_password
         else:
-            new_password = self.pw_client.generate_random_password(
+            new_password = generate_random_password(
                 password_length=args.random_password_length,
                 special_characters=args.no_special_characters)
         pyperclip.copy(new_password)

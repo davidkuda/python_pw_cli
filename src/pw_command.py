@@ -53,17 +53,14 @@ def main():
             # Create section if not exists
             return pw.create_section()
 
+    # pw -rn
     if args.no_special_characters is False:
-        # "args.no_special_characters" stores False. Thus, if passed, it will be falsey.
-        # A good user experience is to avoid passing "pw -r -rn" and just enable "pw -rn"
-        # to generate a new random password without special characters.
-        # Thus, "-rn" will activate "-r".
+        # "-rn" will activate "-r"
         args.generate_random_pw = True
 
+    # pw -rl <length: int>
     if args.random_password_length != 42:
-        # Same as above with "args.no_special_characters": This control flow is designed to
-        # improve the user experience. Instead of using "pw -r -rl 20" for a random pw with
-        # a length of 20, we can instead just use "pw -rl 20".
+        # "-rl <int>" will activate "-r"
         args.generate_random_pw = True
 
     # TODO: Move function "generate_random_pw" from pw_client to utils

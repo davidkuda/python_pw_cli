@@ -14,7 +14,6 @@ from pw_utils import HelpTexts as h
 def main():
     args = parse_args()
     crypto = SynchronousEncryption(ENCRYPTION_KEY)
-    # TODO: I am currently using two classes: `pw` and `pw_client`. Only use pw.
     pw_client = PasswordClient(CREDS_DIR, CREDS_FILE_PATH)
     pw = PasswordCommand(pw_client, crypto, args)
 

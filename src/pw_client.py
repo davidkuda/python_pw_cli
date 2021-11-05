@@ -1,6 +1,4 @@
 import json
-import string
-import random
 import datetime
 from typing import Callable, List
 
@@ -44,18 +42,6 @@ class PasswordClient:
                 if search_term.lower() in secret.lower():
                     yield {'entity': secret,
                            'section': section}
-
-    # TODO: Move generate random pw to utils
-    @staticmethod
-    def generate_random_password(special_characters=True,
-                                 password_length: int = 42) -> str:
-        """Generates a random password and returns it as a string."""
-        digits = string.digits
-        letters = string.ascii_letters
-        punctuation = r"!#$%&()*+:,-./;<=>?@[]^_{|}~" if special_characters else ''
-        characters = digits + letters + punctuation
-        random_password = ''.join(random.choice(characters) for i in range(password_length))
-        return random_password
 
     def add_new_secrets_data(self, entity: str, secrets_data: dict,
                              section: 'str' = None, overwrite: bool = False) -> bool:

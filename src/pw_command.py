@@ -8,6 +8,7 @@ from pw_config import CREDS_DIR, CREDS_FILE_PATH, ENCRYPTION_KEY
 from pw_client import PasswordClient
 from pw_encryption import SynchronousEncryption
 from utils import arg_help_texts as h
+from utils.utilities import generate_random_password
 
 
 def main():
@@ -65,7 +66,7 @@ def main():
 
     # TODO: Move function "generate_random_pw" from pw_client to utils
     if args.generate_random_pw:
-        pw.generate_random_pw()
+        pw.get_random_pw()
         return True
 
     if args.entity is None:
@@ -200,13 +201,13 @@ class PasswordCommand:
             print('')
             return False
 
-    def generate_random_pw(self):
+    def get_random_pw(self):
         if self.args.entity is not None:
-            random_pw = self.pw.generate_random_password(
+            random_pw = generate_random_password(
                 password_length=self.args.random_password_length,
                 special_characters=self.args.no_special_characters)
         else:
-            random_pw = self.pw.generate_random_password(
+            random_pw = generate_random_password(
                 password_length=self.args.random_password_length,
                 special_characters=self.args.no_special_characters)
         pyperclip.copy(random_pw)

@@ -26,21 +26,21 @@ def main():
     if args.all_sections:
         return pw.print_sections()
 
-    # pw -f
+    # pw -f <entity>
     if args.find:
         has_found = pw.find_secrets_data()
         if has_found is False:
             return False
 
-    # pw -n
+    # pw -n <entity> (-kwargs)
     if args.new_secrets_data:
         return pw.add_new_secrets_data()
 
-    # pw -rm
+    # pw -rm <entity>
     if args.remove_entity:
         return pw.remove_secrets_data()
 
-    # pw -rms
+    # pw -rms <section>
     if args.remove_section:
         return pw.remove_section()
 

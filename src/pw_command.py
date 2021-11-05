@@ -4,11 +4,11 @@ from pprint import pprint
 
 import pyperclip
 
-from pw_config import CREDS_DIR, CREDS_FILE_PATH, ENCRYPTION_KEY
-from pw_json_client import SecretsDataJSONClient
-from pw_encryption import SynchronousEncryption
-from pw_utils import generate_random_password
-from pw_utils import HelpTexts as h
+from pw.pw_config import CREDS_DIR, CREDS_FILE_PATH, ENCRYPTION_KEY
+from pw.pw_json_client import SecretsDataJSONClient
+from crypto.pw_encryption import SynchronousEncryption
+from pw.pw_utils import generate_random_password
+from pw.pw_utils import HelpTexts as h
 
 
 def main():

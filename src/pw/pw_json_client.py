@@ -2,7 +2,7 @@ import json
 import datetime
 from typing import List
 
-from pw_utils import get_pws_from_json_file
+from pw.pw_utils import get_pws_from_json_file
 
 
 class SecretsDataJSONClient:

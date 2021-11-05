@@ -44,12 +44,14 @@ def main():
     if args.remove_section:
         return pw.remove_section()
 
-    # TODO: Move logic of "create new section if not exists" to client
+    # pw -s <section>
     if args.section and not args.entity:
         try:
-            return pw_client.print_keys_of_section(args.section)
+            # Print keys of section if exists
+            return pw.print_keys_of_section()
         except KeyError:
-            return pw_client.create_section(args.section)
+            # Create section if not exists
+            return pw.create_section()
 
     if args.no_special_characters is False:
         # "args.no_special_characters" stores False. Thus, if passed, it will be falsey.
@@ -129,6 +131,12 @@ class PasswordCommand:
     def print_sections(self):
         pprint(self.pw.get_sections())
         return True
+
+    def print_keys_of_section(self):
+        self.pw.print_keys_of_section(self.args.section)
+
+    def create_section(self):
+        return self.pw.create_section(self.args.section)
 
     def add_new_secrets_data(self):
         args = self.args

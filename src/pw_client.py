@@ -29,6 +29,14 @@ class PasswordClient:
         secrets_data = self.pw_dict[section][entity]
         return secrets_data
 
+    def remove_secrets_data(self, key: str, section: str = None):
+        """Removes a password from the creds.json file."""
+        section = section or 'main'
+        self.pw_dict[section].pop(key)
+        self.save_dict_to_file()
+        print(f'Deleted {key} from {section}')
+        print('')
+
     def find_key(self, search_term: str) -> List[dict]:
         """Iterate over all secrets and yield a secret's name that matches the search_term."""
         for section, secrets in self.pw_dict.items():
@@ -130,14 +138,6 @@ class PasswordClient:
         self.pw_dict.pop(section)
         self.save_dict_to_file()
         print(f'Removed Section: "{section}"')
-
-    def remove_entity(self, entity: str, section: str = None) -> None:
-        """Removes a password from the creds.json file."""
-        section = section or 'main'
-        self.pw_dict[section].pop(entity)
-        self.save_dict_to_file()
-        print(f'Deleted {entity} from {section}')
-        print('')
 
     def open_pw_file(pw_file_path, app: str = 'Sublime'):
         """Open pw file with an app (default: Sublime)."""

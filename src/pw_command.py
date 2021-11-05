@@ -32,12 +32,13 @@ def main():
         if has_found is False:
             return
 
+    # pw -n
     if args.new_secrets_data:
         return pw.add_new_secrets_data()
 
+    # pw -rm
     if args.remove_entity:
-        return pw_client.remove_entity(entity=args.remove_entity,
-                                       section=args.section)
+        return pw.remove_secrets_data()
 
     if args.remove_section:
         return pw_client.remove_section(args.remove_section)
@@ -168,6 +169,11 @@ class PasswordCommand:
                                      section=args.section,
                                      overwrite=args.overwrite)
 
+        return True
+
+    def remove_secrets_data(self):
+        key = self.args.remove_entity
+        self.pw.remove_secrets_data(key, self.args.section)
         return True
 
     def find_secrets_data(self):

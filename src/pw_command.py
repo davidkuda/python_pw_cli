@@ -5,7 +5,7 @@ from pprint import pprint
 import pyperclip
 
 from pw_config import CREDS_DIR, CREDS_FILE_PATH, ENCRYPTION_KEY
-from pw_client import PasswordClient
+from pw_client import SecretsDataJSONClient
 from pw_encryption import SynchronousEncryption
 from pw_utils import generate_random_password
 from pw_utils import HelpTexts as h
@@ -14,8 +14,8 @@ from pw_utils import HelpTexts as h
 def main():
     args = parse_args()
     crypto = SynchronousEncryption(ENCRYPTION_KEY)
-    pw_client = PasswordClient(CREDS_DIR, CREDS_FILE_PATH)
-    pw = PasswordCommand(pw_client, crypto, args)
+    pw_json_client = SecretsDataJSONClient(CREDS_DIR, CREDS_FILE_PATH)
+    pw = PasswordCommand(pw_json_client, crypto, args)
 
     # pw -d
     if args.debug:
@@ -121,22 +121,22 @@ def parse_args():
     return args
 
 class PasswordCommand:
-    def __init__(self, pw_client: PasswordClient,
+    def __init__(self, pw_client: SecretsDataJSONClient,
                  crypto: SynchronousEncryption,
                  args: argparse.ArgumentParser):
-        self.pw = pw_client
+        self.pw_client = pw_client
         self.crypto = crypto
         self.args = args
 
     def print_sections(self):
-        pprint(self.pw.get_sections())
+        pprint(self.pw_client.get_sections())
         return True
 
     def print_keys_of_section(self):
-        self.pw.print_keys_of_section(self.args.section)
+        self.pw_client.print_keys_of_section(self.args.section)
 
     def create_section(self):
-        return self.pw.create_section(self.args.section)
+        return self.pw_client.create_section(self.args.section)
 
     def add_new_secrets_data(self):
         args = self.args
@@ -146,7 +146,7 @@ class PasswordCommand:
         if args.set_password:
             new_password = args.set_password
         else:
-            new_password = self.pw.generate_random_password(
+            new_password = self.pw_client.generate_random_password(
                 password_length=args.random_password_length,
                 special_characters=args.no_special_characters)
         pyperclip.copy(new_password)
@@ -173,7 +173,7 @@ class PasswordCommand:
                 encrypted_value = self.crypto.encrypt(value)
                 secrets_data[key] = encrypted_value
 
-        self.pw.add_new_secrets_data(entity=args.new_secrets_data,
+        self.pw_client.add_new_secrets_data(entity=args.new_secrets_data,
                                      secrets_data=secrets_data,
                                      section=args.section,
                                      overwrite=args.overwrite)
@@ -181,22 +181,22 @@ class PasswordCommand:
         return True
 
     def get_secrets_data(self):
-        secrets_data = self.pw.get_secrets_data(
+        secrets_data = self.pw_client.get_secrets_data(
             entity=self.args.entity,
             section=self.args.section)
         return secrets_data
 
     def remove_secrets_data(self):
         key = self.args.remove_entity
-        self.pw.remove_secrets_data(key, self.args.section)
+        self.pw_client.remove_secrets_data(key, self.args.section)
         return True
 
     def remove_section(self):
-        self.pw.remove_section(self.args.remove_section)
+        self.pw_client.remove_section(self.args.remove_section)
         return True
 
     def find_secrets_data(self):
-        results_as_generator = self.pw.find_key(self.args.find)
+        results_as_generator = self.pw_client.find_key(self.args.find)
         results = list(results_as_generator)
         for result in results:
             print(f'Found "{result["entity"]}" in section "{result["section"]}".')

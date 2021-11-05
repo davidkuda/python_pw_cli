@@ -5,7 +5,7 @@ from typing import List
 from pw_utils import get_pws_from_json_file
 
 
-class PasswordClient:
+class SecretsDataJSONClient:
     def __init__(self, creds_dir: str, creds_file_path: str):
         self.creds_dir = creds_dir
         self.creds_file_path = creds_file_path

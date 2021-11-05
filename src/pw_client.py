@@ -1,15 +1,15 @@
 import json
 import datetime
-from typing import Callable, List
+from typing import List
 
-import pw_utils
+from pw_utils import get_pws_from_json_file
 
 
 class PasswordClient:
     def __init__(self, creds_dir: str, creds_file_path: str):
         self.creds_dir = creds_dir
         self.creds_file_path = creds_file_path
-        self.pw_dict = pw_utils.get_pws_from_json_file(creds_file_path)
+        self.pw_dict = get_pws_from_json_file(creds_file_path)
         # TODO: Move crypto to the command
 
     def get_secrets_data(self, entity: str, section: str = None) -> dict:

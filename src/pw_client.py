@@ -113,10 +113,9 @@ class PasswordClient:
         self.save_dict_to_file()
         print(f'Created a new section: "{section_name}".')
 
-    def print_sections(self):
-        """Print all keys of a dictionary (depth -> 1)."""
-        for key in self.pw_dict.keys():
-            print(key)
+    def get_sections(self) -> List[str]:
+        """Get all sections of the secrets data file (json)."""
+        return [pw for pw in self.pw_dict.keys()]
 
     def print_keys_of_section(self, section_name):
         """Output all available keys of a section to the console."""

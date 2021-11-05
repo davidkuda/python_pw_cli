@@ -13,17 +13,20 @@ from utils import arg_help_texts as h
 def main():
     args = parse_args()
     crypto = SynchronousEncryption(ENCRYPTION_KEY)
-    # TODO: I am currently using two classes: `pw` and `pw_clien`. Only use pw.
+    # TODO: I am currently using two classes: `pw` and `pw_client`. Only use pw.
     pw_client = PasswordClient(CREDS_DIR, CREDS_FILE_PATH)
     pw = PasswordCommand(pw_client, crypto, args)
 
+    # pw -d
     if args.debug:
         pprint(args.__dict__)
         print('')
 
+    # pw -as
     if args.all_sections:
-        return pw_client.print_sections()
+        return pw.print_sections()
 
+    # pw -f
     if args.find:
         has_found = pw.find_secrets_data()
         if has_found is False:
@@ -114,12 +117,16 @@ def parse_args():
     return args
 
 class PasswordCommand:
-    def __init__(self, pw: PasswordClient,
+    def __init__(self, pw_client: PasswordClient,
                  crypto: SynchronousEncryption,
                  args: argparse.ArgumentParser):
-        self.pw = pw
+        self.pw = pw_client
         self.crypto = crypto
         self.args = args
+
+    def print_sections(self):
+        pprint(self.pw.get_sections())
+        return True
 
     def add_new_secrets_data(self):
         args = self.args

@@ -36,6 +36,10 @@ def main():
     if args.new_secrets_data:
         return pw.add_new_secrets_data()
 
+    # pw -u <key>=<value> <entity>
+    if args.update:
+        return pw.update_secrets_data()
+
     # pw -rm <entity>
     if args.remove_entity:
         return pw.remove_secrets_data()
@@ -101,15 +105,16 @@ def parse_args():
     parser.add_argument('-ks', '--available_keys', action='store_true')
     parser.add_argument('-e', '--expressive', action='store_true')
     parser.add_argument('-as', '--all_sections', action='store_true', help=h.all_sections)
-    parser.add_argument('-s', '--section', type=str, help=h.section)
+    parser.add_argument('-s', '--section', type=str, default='main', help=h.section)
 
     parser.add_argument('-r', '--generate_random_pw', action='store_true', help=h.generate_random_pw)
     parser.add_argument('-rl', '--random_password_length', type=int, default=42)
     parser.add_argument('-rn', '--no_special_characters', action='store_false')
 
     parser.add_argument('-n', '--new_secrets_data', type=str, help=h.add_new_password)
+    parser.add_argument('-u', '--update', type=str)
     parser.add_argument('-pw', '--set_password', type=str, help=h.set_password)
-    parser.add_argument('-u', '--username', type=str)
+    parser.add_argument('-un', '--username', type=str)
     parser.add_argument('-w', '--website', type=str)
     parser.add_argument('-kwargs', '--kwargs', '--keyword_arguments', type=str)
     parser.add_argument('-ow', '--overwrite', action='store_false')
@@ -179,6 +184,15 @@ class PasswordCommand:
                                      overwrite=args.overwrite)
 
         return True
+
+    def update_secrets_data(self):
+        """`pw -u <key>=<value> <entity>`"""
+        k, v = self.args.update.split('=')
+        new_data = {k: self.crypto.encrypt(v)}
+        self.pw_client.update_secrets_data(
+            entity=self.args.entity,
+            section=self.args.section,
+            new_data=new_data)
 
     def get_secrets_data(self):
         secrets_data = self.pw_client.get_secrets_data(

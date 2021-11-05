@@ -88,6 +88,10 @@ class SecretsDataJSONClient:
         self.save_dict_to_file()
         return True
 
+    def update_secrets_data(self, entity:str, section: str, new_data: dict):
+        self.pw_dict[section][entity].update(new_data)
+        self.save_dict_to_file()
+
     def create_backup(self):
         """Create a backup of the dictionary with the passwords."""
         now = datetime.datetime.now().isoformat()

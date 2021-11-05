@@ -8,7 +8,7 @@ from pw_config import CREDS_DIR, CREDS_FILE_PATH, ENCRYPTION_KEY
 from pw_client import PasswordClient
 from pw_encryption import SynchronousEncryption
 from utils import arg_help_texts as h
-from utils.utilities import generate_random_password
+from pw_utils import generate_random_password
 
 
 def main():

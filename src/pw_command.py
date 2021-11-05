@@ -73,7 +73,7 @@ def main():
         print('Nothing happened. No flags used. No args passed after pw command.')
         return False
 
-    secrets_data = pw_client.get_secrets_data(entity=args.entity, section=args.section)
+    secrets_data = pw.get_secrets_data()
 
     # pw -ks
     if args.available_keys:
@@ -180,6 +180,12 @@ class PasswordCommand:
                                      overwrite=args.overwrite)
 
         return True
+
+    def get_secrets_data(self):
+        secrets_data = self.pw.get_secrets_data(
+            entity=self.args.entity,
+            section=self.args.section)
+        return secrets_data
 
     def remove_secrets_data(self):
         key = self.args.remove_entity

@@ -54,7 +54,7 @@ def main():
             # Create section if not exists
             return pw.create_section()
 
-    # pw -rn
+    # pw -rn (no-special-characters)
     if args.no_special_characters is False:
         # "-rn" will activate "-r"
         args.generate_random_pw = True
@@ -64,7 +64,7 @@ def main():
         # "-rl <int>" will activate "-r"
         args.generate_random_pw = True
 
-    # TODO: Move function "generate_random_pw" from pw_client to utils
+    # pw -r
     if args.generate_random_pw:
         pw.get_random_pw()
         return True
@@ -75,19 +75,22 @@ def main():
 
     secrets_data = pw_client.get_secrets_data(entity=args.entity, section=args.section)
 
+    # pw -ks
     if args.available_keys:
         print(f'There are {len(secrets_data.keys())} available keys for {args.entity}:')
         print(', '.join(secrets_data.keys()))
         return True
 
+    # pw -e <entity>
     if args.expressive:
         pw.print_secrets_data_values(secrets_data)
 
+    # pw <entity>
     if args.entity:
         return pw.get_secrets_data_value(secrets_data)
 
-# TODO: Can I attach a callable / function directly to arg parse so
-# TODO: that I can avoid the long if / else statements in "main()"?
+# TODO: Can I attach a callable / function directly to arg parse?
+# -> How to avoid the complex if / else control flow in "main()"?
 def parse_args():
     parser = argparse.ArgumentParser(description='Manage your passwords from your terminal.')
     parser.add_argument('entity', type=str, help=h.entity, nargs='?')

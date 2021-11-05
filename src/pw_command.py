@@ -30,7 +30,7 @@ def main():
     if args.find:
         has_found = pw.find_secrets_data()
         if has_found is False:
-            return
+            return False
 
     # pw -n
     if args.new_secrets_data:
@@ -40,8 +40,9 @@ def main():
     if args.remove_entity:
         return pw.remove_secrets_data()
 
+    # pw -rms
     if args.remove_section:
-        return pw_client.remove_section(args.remove_section)
+        return pw.remove_section()
 
     # TODO: Move logic of "create new section if not exists" to client
     if args.section and not args.entity:
@@ -174,6 +175,10 @@ class PasswordCommand:
     def remove_secrets_data(self):
         key = self.args.remove_entity
         self.pw.remove_secrets_data(key, self.args.section)
+        return True
+
+    def remove_section(self):
+        self.pw.remove_section(self.args.remove_section)
         return True
 
     def find_secrets_data(self):

@@ -112,7 +112,7 @@ def parse_args():
     parser.add_argument('-u', '--username', type=str)
     parser.add_argument('-w', '--website', type=str)
     parser.add_argument('-kwargs', '--kwargs', '--keyword_arguments', type=str)
-    parser.add_argument('-ow', '--overwrite', action='store_true')
+    parser.add_argument('-ow', '--overwrite', action='store_false')
 
     parser.add_argument('-rm', '--remove_entity', type=str, help=h.remove)
     parser.add_argument('-rms', '--remove_section', type=str, help=h.remove)

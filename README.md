@@ -55,7 +55,7 @@ for the commands below. Here is what this tool can do:
     }
 ```
 
-### How I set it up:
+### A suggestion how to set up the `pw` command:
 
 I create a symlink to the python script `pw_command.py` (command 3). The name of this symlink is just "pw".
 The symlink needs execution permissions (command 4). The symlink needs to be in a folder that is listed

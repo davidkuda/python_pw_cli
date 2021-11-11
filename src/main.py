@@ -47,7 +47,10 @@ def main():
         return pw.remove_section()
 
     # pw -s <section>
-    if args.section and not args.entity:
+    if (
+        args.section in pw.get_all_sections()
+        and not args.entity
+    ):
         try:
             # Print keys of section if exists
             return pw.print_keys_of_section()

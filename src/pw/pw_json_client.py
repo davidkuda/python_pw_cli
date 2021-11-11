@@ -117,6 +117,8 @@ class SecretsDataJSONClient:
 
     def print_keys_of_section(self, section_name):
         """Output all available keys of a section to the console."""
+        if section_name is None:
+            section_name = 'main'
         for key in self.pw_dict[section_name].keys():
             print(key)
 

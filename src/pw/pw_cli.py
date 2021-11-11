@@ -1,5 +1,6 @@
 import argparse
 from pprint import pprint
+from typing import List
 
 import pyperclip
 
@@ -16,9 +17,8 @@ class PasswordCommand:
         self.crypto = crypto
         self.args = args
 
-    def print_sections(self):
-        pprint(self.pw_client.get_sections())
-        return True
+    def get_all_sections(self) -> List[str]:
+        return self.pw_client.get_sections()
 
     def print_keys_of_section(self):
         self.pw_client.print_keys_of_section(self.args.section)

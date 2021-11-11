@@ -22,7 +22,8 @@ def main():
 
     # pw -as
     if args.all_sections:
-        return pw.print_sections()
+        pprint(pw.get_all_sections())
+        return True
 
     # pw -f <entity>
     if args.find:

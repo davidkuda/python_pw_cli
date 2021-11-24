@@ -1,6 +1,6 @@
 # Get passwords into your clipboard from the terminal.
 
-![Preview of the pw tool](documentation/pw_v0.2.gif)
+![Preview of the pw tool](https://github.com/davidkuda/media/blob/main/pw_cli/pw_v0.2.gif)
 
 ### Features: 
 

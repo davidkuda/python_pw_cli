@@ -10,7 +10,6 @@ class SecretsDataJSONClient:
         self.creds_dir = creds_dir
         self.creds_file_path = creds_file_path
         self.pw_dict = get_pws_from_json_file(creds_file_path)
-        # TODO: Move crypto to the command
 
     def get_secrets_data(self, entity: str, section: str = None) -> dict:
         """Return secrets data from self.pw_dict.
@@ -114,11 +113,10 @@ class SecretsDataJSONClient:
     def get_sections(self) -> List[str]:
         """Get all sections of the secrets data file (json)."""
         return [pw for pw in self.pw_dict.keys()]
+        # yield from self.pw_dict.keys()
 
     def print_keys_of_section(self, section_name: str = None):
         """Output all available keys of a section to the console."""
-        if section_name is None:
-            section_name = 'main'
         for key in self.pw_dict[section_name].keys():
             print(key)
 

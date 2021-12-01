@@ -47,18 +47,6 @@ def main():
     if args.remove_section:
         return pw.remove_section()
 
-    # pw -s <section>
-    if (
-        args.section in pw.get_all_sections()
-        and not args.entity
-    ):
-        try:
-            # Print keys of section if exists
-            return pw.print_keys_of_section()
-        except KeyError:
-            # Create section if not exists
-            return pw.create_section()
-
     # pw -rn (no-special-characters)
     if args.no_special_characters is False:
         # "-rn" will activate "-r"
@@ -73,6 +61,18 @@ def main():
     if args.generate_random_pw:
         pw.get_random_pw()
         return True
+
+    # pw -s <section>
+    if (
+        args.section
+        and not args.entity
+    ):
+        try:
+            # Print keys of section if exists
+            return pw.print_keys_of_section()
+        except KeyError:
+            # Create section if not exists
+            return pw.create_section()
 
     if args.entity is None:
         print('Nothing happened. No flags used. No args passed after pw command.')

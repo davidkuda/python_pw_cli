@@ -21,6 +21,8 @@ class PasswordCommand:
         return self.pw_client.get_sections()
 
     def print_keys_of_section(self):
+        if self.args.section is None:
+            self.args.section = 'main'
         self.pw_client.print_keys_of_section(self.args.section)
 
     def create_section(self):

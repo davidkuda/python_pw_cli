@@ -107,7 +107,7 @@ def parse_args():
     parser.add_argument('-ks', '--available_keys', action='store_true')
     parser.add_argument('-e', '--expressive', action='store_true')
     parser.add_argument('-as', '--all_sections', action='store_true', help=h.all_sections)
-    parser.add_argument('-s', '--section', type=str, default='main', help=h.section)
+    parser.add_argument('-s', '--section', type=str, help=h.section)
 
     parser.add_argument('-r', '--generate_random_pw', action='store_true', help=h.generate_random_pw)
     parser.add_argument('-rl', '--random_password_length', type=int, default=42)

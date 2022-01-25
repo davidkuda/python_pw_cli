@@ -1,6 +1,7 @@
 import json
 import random
 import string
+from typing import Generator
 
 
 class HelpTexts:
@@ -32,16 +33,18 @@ def generate_random_password(special_characters=True,
         characters = digits + letters + punctuation
         random_password = ''.join(random.choice(characters) for i in range(password_length))
         return random_password
-
-
-def get_pws_from_json_file(file_path):
-    """Loads json data into python to retrieve passwords that are stored as key value pairs."""
-    with open(file_path) as pws:
-        return json.load(pws)
-
+    
 
 def my_exchandler(type, value, traceback):
     """Set 'sys.excepthook' to myexchandler to avoid traceback.
      Credits: https://stackoverflow.com/questions/38598740/raising-errors-without-traceback
     """
     print(value)
+
+
+def find_key(key: str, dictionary: dict) -> Generator[dict, None, None]:
+    """Iterate a dict recursively and yield all values if key matches."""
+    for section, secrets in dictionary:
+        for secret in secrets:
+            if key.lower() in secret.lower():
+                yield {'entity': secret, 'section': section}

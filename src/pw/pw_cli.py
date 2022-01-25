@@ -5,7 +5,7 @@ from typing import List
 import pyperclip
 
 from .pw_json_client import SecretsDataJSONClient
-from .pw_utils import generate_random_password
+from .pw_utils import generate_random_password, find_key
 from crypto.pw_encryption import SynchronousEncryption
 
 
@@ -18,27 +18,40 @@ class PasswordCommand:
         self.args = args
 
     def get_all_sections(self) -> List[str]:
-        return self.pw_client.get_sections()
+        """Get all sections of the secrets data file (json)."""
+        return [pw for pw in self.pw_client.pw_dict.keys()]
+        # yield from self.pw_dict.keys()
 
     def print_keys_of_section(self):
+        """Output all available keys of a section to the console."""
         if self.args.section is None:
             self.args.section = 'main'
-        self.pw_client.print_keys_of_section(self.args.section)
+        for key in self.pw_client.pw_dict[self.args.section].keys():
+            print(key)
 
     def create_section(self):
-        return self.pw_client.create_section(self.args.section)
+        """Creates a new section."""
+        
+        if self._check_existence_of_section(self.args.section):
+            return print(f'Section {self.args.section} exists already.')
+
+        self.pw_client.pw_dict[self.args.section] = {}
+        self.pw_client.save_dict_to_file()
+        print(f'Created a new section: "{self.args.section}".')
+    
+    def _check_existence_of_section(self, section: str):
+        if section in self.pw_client.pw_dict:
+            return True
 
     def add_new_secrets_data(self):
-        args = self.args
-
         secrets_data = {}
 
-        if args.set_password:
-            new_password = args.set_password
+        if self.args.set_password:
+            new_password = self.args.set_password
         else:
             new_password = generate_random_password(
-                password_length=args.random_password_length,
-                special_characters=args.no_special_characters)
+                password_length=self.args.random_password_length,
+                special_characters=self.args.no_special_characters)
         pyperclip.copy(new_password)
         encrypted_password = self.crypto.encrypt(new_password)
         secrets_data['password'] = encrypted_password
@@ -63,39 +76,65 @@ class PasswordCommand:
                 encrypted_value = self.crypto.encrypt(value)
                 secrets_data[key] = encrypted_value
 
-        self.pw_client.add_new_secrets_data(entity=args.new_secrets_data,
-                                     secrets_data=secrets_data,
-                                     section=args.section,
-                                     overwrite=args.overwrite)
+        if self.args.section is None:
+            self.args.section = 'main'
 
+        if not self._check_existence_of_section(self.args.section):
+            self.create_section()
+
+        if (
+            self.args.entity in self.pw_client.pw_dict[self.args.section]
+            and self.args.overwrite is False
+        ):
+            print('Entity is already there. Nothing happened.')
+            print('Use the -ow / --overwrite option to update existing secrets data.')
+            return False
+
+        entity = self.args.new_secrets_data
+        new_secrets_data = {entity: secrets_data}
+
+        print(f'Created new password for "{entity}".')
+        print('')
+
+        self.pw_client.pw_dict[self.args.section].update(new_secrets_data)
+        self.pw_client.save_dict_to_file()
         return True
 
     def update_secrets_data(self):
-        """`pw -u <key>=<value> <entity>`"""
+        """`pw -u <key>=<value> (-s <section>="main") <entity>`"""
         k, v = self.args.update.split('=')
         new_data = {k: self.crypto.encrypt(v)}
-        self.pw_client.update_secrets_data(
-            entity=self.args.entity,
-            section=self.args.section,
-            new_data=new_data)
+        
+        if self.args.section is None:
+            self.args.section = 'main'
+              
+        self.pw_client.pw_dict[self.args.section][self.args.entity].update(new_data)
+        self.pw_client.save_dict_to_file()
 
     def get_secrets_data(self):
-        secrets_data = self.pw_client.get_secrets_data(
-            entity=self.args.entity,
-            section=self.args.section)
+        if self.args.section is None:
+            self.args.section = 'main'
+        secrets_data = self.pw_client.pw_dict[self.args.section][self.args.entity]
         return secrets_data
 
     def remove_secrets_data(self):
         key = self.args.remove_entity
-        self.pw_client.remove_secrets_data(key, self.args.section)
+        section = self.args.section or 'main'
+        self.pw_client.pw_dict[section].pop(key)
+        self.pw_client.save_dict_to_file()
+        print(f'Deleted {key} from {section}')
+        print('')
         return True
 
     def remove_section(self):
-        self.pw_client.remove_section(self.args.remove_section)
+        section = self.args.remove_section
+        self.pw_client.pw_dict.pop(section)
+        self.pw_client.save_dict_to_file()
+        print(f'Removed Section: "{section}"')
         return True
 
     def find_secrets_data(self):
-        results_as_generator = self.pw_client.find_key(self.args.find)
+        results_as_generator = find_key(self.args.find, self.pw_client.pw_dict)
         results = list(results_as_generator)
         for result in results:
             print(f'Found "{result["entity"]}" in section "{result["section"]}".')

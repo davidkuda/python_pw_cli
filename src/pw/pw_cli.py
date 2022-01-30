@@ -5,22 +5,27 @@ from typing import List
 
 import pyperclip
 
-from pw.pw_config import CREDS_DIR, CREDS_FILE_PATH, ENCRYPTION_KEY
+from pw.pw_config import PWConfig, get_prod_config
 from .pw_json_client import SecretsDataJSONClient
 from .pw_utils import generate_random_password, find_key, HelpTexts as h
 from crypto.synchronous_encryption_fernet import SynchronousEncryptionFernet
 
 
 class PasswordCommand:
-    def __init__(self, pw_client: SecretsDataJSONClient,
-                 crypto: SynchronousEncryptionFernet,
-                 args: argparse.ArgumentParser):
-        self.pw_client = pw_client
-        self.crypto = crypto
-        self.args = args
+    def __init__(self, pw_config: PWConfig = None):
+        if pw_config is None:
+            pw_config = get_prod_config()
+
+        self.pw_client = SecretsDataJSONClient(
+            pw_config.creds_dir, pw_config.creds_file_name)
+        self.crypto = SynchronousEncryptionFernet(pw_config.encryption_key)
+        self.args: argparse.Namespace = None # set later with "setattr()"
     
     @staticmethod
-    def main(args: List[str] = None):
+    def main(args: List[str] = None, pw_config: PWConfig = None):
+
+        if pw_config is None:
+            pw_config = get_prod_config()
         
         if args is None:
             args = sys.argv[1:]
@@ -28,11 +33,10 @@ class PasswordCommand:
         if not isinstance(args, list):
             raise TypeError("Make sure to pass a list of strings. " \
                             f"You passed: {type(args)}")
-        
+
+        pw = PasswordCommand(pw_config)
         args = PasswordCommand.parse_args(args)
-        crypto = SynchronousEncryptionFernet(ENCRYPTION_KEY)
-        pw_json_client = SecretsDataJSONClient(CREDS_DIR, CREDS_FILE_PATH)
-        pw = PasswordCommand(pw_json_client, crypto, args)
+        setattr(pw, "args", args)
 
         # pw -d
         if args.debug:

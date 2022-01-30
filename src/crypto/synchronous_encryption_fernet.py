@@ -1,7 +1,7 @@
 from cryptography.fernet import Fernet
 
 
-class SynchronousEncryption:
+class SynchronousEncryptionFernet:
     def __init__(self, encryption_key):
         self.cipher = Fernet(encryption_key)
 
@@ -28,4 +28,4 @@ def encrypt_async():
 
 
 if __name__ == '__main__':
-    print(SynchronousEncryption.generate_key())
+    print(SynchronousEncryptionFernet.generate_key())

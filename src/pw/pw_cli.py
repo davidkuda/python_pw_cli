@@ -6,12 +6,12 @@ import pyperclip
 
 from .pw_json_client import SecretsDataJSONClient
 from .pw_utils import generate_random_password, find_key
-from crypto.pw_encryption import SynchronousEncryption
+from crypto.synchronous_encryption_fernet import SynchronousEncryptionFernet
 
 
 class PasswordCommand:
     def __init__(self, pw_client: SecretsDataJSONClient,
-                 crypto: SynchronousEncryption,
+                 crypto: SynchronousEncryptionFernet,
                  args: argparse.ArgumentParser):
         self.pw_client = pw_client
         self.crypto = crypto

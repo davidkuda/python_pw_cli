@@ -1,4 +1,5 @@
 #!/opt/homebrew/Caskroom/miniconda/base/bin/python
+import sys
 import argparse
 from pprint import pprint
 
@@ -96,7 +97,7 @@ def main():
 
 # TODO: Can I attach a callable / function directly to arg parse?
 # -> How to avoid the complex if / else control flow in "main()"?
-def parse_args():
+def parse_args(args):
     parser = argparse.ArgumentParser(description='Manage your passwords from your terminal.')
     parser.add_argument('entity', type=str, help=h.entity, nargs='?')
 
@@ -124,8 +125,7 @@ def parse_args():
     parser.add_argument('-rm', '--remove_entity', type=str, help=h.remove)
     parser.add_argument('-rms', '--remove_section', type=str, help=h.remove)
 
-    args = parser.parse_args()
-    return args
+    return parser.parse_args(args)
 
 
 if __name__ == '__main__':

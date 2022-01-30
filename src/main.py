@@ -5,13 +5,13 @@ from pprint import pprint
 from pw.pw_cli import PasswordCommand
 from pw.pw_config import CREDS_DIR, CREDS_FILE_PATH, ENCRYPTION_KEY
 from pw.pw_json_client import SecretsDataJSONClient
-from crypto.pw_encryption import SynchronousEncryption
+from crypto.synchronous_encryption_fernet import SynchronousEncryptionFernet
 from pw.pw_utils import HelpTexts as h
 
 
 def main():
-    args = parse_args()
-    crypto = SynchronousEncryption(ENCRYPTION_KEY)
+    args = parse_args(sys.argv[1:])
+    crypto = SynchronousEncryptionFernet(ENCRYPTION_KEY)
     pw_json_client = SecretsDataJSONClient(CREDS_DIR, CREDS_FILE_PATH)
     pw = PasswordCommand(pw_json_client, crypto, args)
 

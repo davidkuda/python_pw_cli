@@ -71,15 +71,3 @@ Furthermore, you need to assure two things:
 1. Update line 1 of `/src/pw_command.py` by specifying your path to Python3 (find out with `which python3`)
 2. Create a passwords.json somewhere and pass the path to the variables in `/src/pw/pw_config.py` accordingly
 
-### Todo:
-
-- __Write Tests!__
-- Encrypt / Decrypt creds file
-- Main has become a huge function with a lot of if statements. How can I refactor main() to be less complex and easier to read? Maybe I could pass a callable / function directly to the arguments and avoid if/elsing again below?
-- Tab auto completion. How can I read available keys so that I could autocomplete them?
-- Expose functionalities with an API so that I can access my passwords from my mobile phone -> Create a Flask client
-- Use a logger instead of prints
-- Test mongoDB
-- Handle dependency -> Pyperclip is now installed globally. How can I hashbang a conda environment?
-- catch KeyError when entering a wrong entity
-- Update help texts

@@ -1,0 +1,19 @@
+{
+  "main": {
+    "guitar": {
+      "password": "gAAAAABiFV4_P54skIbQ6GsAtrGYxgLKQt2Hp91ILszvcUTAc6PaWuTm_1qGPYAAwa9ULOHLu2D5Z-8psYCuIDPHoj5dQku0Qg_bHae_W9rncKy3pDy7p3gn9aLlM9RBaxcKw1NikuGR",
+      "brand": "gAAAAABiFV4_a9q6lVdENH-aBuqJH-SAXu76Q4k-FjIWdND_4w7A2jz45eAuan4848MwpxSxU_uyUhVc4cP4vK6ciojyOoJ4nQ==",
+      "model": "gAAAAABiFV4_FzbPpUufOBBwI4X0U3yGN-C6czGZdP2mGzGCjasnz67fIPrImOcPxhQH2ibXHIEQCerka2Hd9DXDgIY_EbwOzg==",
+      "string_gauge": "gAAAAABiFV4_ZNWv9bpIDn4dsnQMPNTtsIe1lNQ30NJOYUmGUEHKoqOI1Z6-M8W7D-ZBicOYnm-GhVfQ0erSrPcXWyehCm0XsQ==",
+      "amp": "gAAAAABiFV4_lj8ThIhhjvVlkWTvjfAqcJ_bVDyBbPluCg3iLUq03laOALSINoNfrmWwp3Ps4ACRGzZJMj-Q-6vrPMaX7XGrBrMIBaFp2YvddfM6GWvtfak="
+    },
+    "pytest": {
+      "password": "gAAAAABh9wKmOexyh6au7Q2mFD9Y5x7iUmj0XrRwZUQ2DzWBbSU8G2BlVaFl1eJVT701zQe6ZUbP3UWJ00_cUl7qCR9RkanFsA=="
+    }
+  },
+  "test": {
+    "kafka": {
+      "password": "gAAAAABh9wKOCz9c3Cwjk2q5uJ9Ns_xwY1oteNU-H9M5x9yytlXK3aPvirFpi2WKYTmMwmWKeaganyyKUThnijNgN6EVQ8MQ4sT6IBm2CzMuAkiiEU0JTKA="
+    }
+  }
+}

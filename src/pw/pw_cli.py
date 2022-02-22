@@ -1,21 +1,152 @@
+import sys
 import argparse
 from pprint import pprint
 from typing import List
 
 import pyperclip
 
+from pw.pw_config import PWConfig, get_prod_config
 from .pw_json_client import SecretsDataJSONClient
-from .pw_utils import generate_random_password, find_key
-from crypto.pw_encryption import SynchronousEncryption
+from .pw_utils import generate_random_password, find_key, HelpTexts as h
+from crypto.synchronous_encryption_fernet import SynchronousEncryptionFernet
 
 
 class PasswordCommand:
-    def __init__(self, pw_client: SecretsDataJSONClient,
-                 crypto: SynchronousEncryption,
-                 args: argparse.ArgumentParser):
-        self.pw_client = pw_client
-        self.crypto = crypto
-        self.args = args
+    def __init__(self, pw_config: PWConfig = None):
+        if pw_config is None:
+            pw_config = get_prod_config()
+
+        self.pw_client = SecretsDataJSONClient(
+            pw_config.creds_dir, pw_config.creds_file_name)
+        self.crypto = SynchronousEncryptionFernet(pw_config.encryption_key)
+        self.args: argparse.Namespace = None # set later with "setattr()"
+    
+    @staticmethod
+    def main(args: List[str] = None, pw_config: PWConfig = None):
+
+        if pw_config is None:
+            pw_config = get_prod_config()
+        
+        if args is None:
+            args = sys.argv[1:]
+        
+        if not isinstance(args, list):
+            raise TypeError("Make sure to pass a list of strings. " \
+                            f"You passed: {type(args)}")
+
+        pw = PasswordCommand(pw_config)
+        args = PasswordCommand.parse_args(args)
+        setattr(pw, "args", args)
+
+        # pw -d
+        if args.debug:
+            pprint(args.__dict__)
+            print('')
+
+        # pw -as
+        if args.all_sections:
+            pprint(pw.get_all_sections())
+            return True
+
+        # pw -f <entity>
+        if args.find:
+            has_found = pw.find_secrets_data()
+            if has_found is False:
+                return False
+
+        # pw -n <entity> (-kwargs)
+        if args.new_secrets_data:
+            return pw.add_new_secrets_data()
+
+        # pw -u <key>=<value> <entity>
+        if args.update:
+            return pw.update_secrets_data()
+
+        # pw -rm <entity>
+        if args.remove_entity:
+            return pw.remove_secrets_data()
+
+        # pw -rms <section>
+        if args.remove_section:
+            return pw.remove_section()
+
+        # pw -rn (no-special-characters)
+        if args.no_special_characters is False:
+            # "-rn" will activate "-r"
+            args.generate_random_pw = True
+
+        # pw -rl <length: int>
+        if args.random_password_length != 42:
+            # "-rl <int>" will activate "-r"
+            args.generate_random_pw = True
+
+        # pw -r
+        if args.generate_random_pw:
+            pw.get_random_pw()
+            return True
+
+        # pw -s <section>
+        if (
+            args.section
+            and not args.entity
+        ):
+            try:
+                # Print keys of section if exists
+                return pw.print_keys_of_section()
+            except KeyError:
+                # Create section if not exists
+                return pw.create_section()
+
+        if args.entity is None:
+            print('Nothing happened. No flags used. No args passed after pw command.')
+            return False
+
+        secrets_data = pw.get_secrets_data()
+
+        # pw -ks
+        if args.available_keys:
+            print(f'There are {len(secrets_data.keys())} available keys for {args.entity}:')
+            print(', '.join(secrets_data.keys()))
+            return True
+
+        # pw -e <entity>
+        if args.expressive:
+            pw.print_secrets_data_values(secrets_data)
+
+        # pw <entity>
+        if args.entity:
+            return pw.get_secrets_data_value(secrets_data)
+    
+    @staticmethod
+    def parse_args(args):
+        parser = argparse.ArgumentParser(description='Manage your passwords from your terminal.')
+        parser.add_argument('entity', type=str, help=h.entity, nargs='?')
+
+        parser.add_argument('-d', '--debug', action='store_true')
+
+        parser.add_argument('-f', '--find', type=str)
+        parser.add_argument('-k', '--secret_key', type=str, default='password')
+        parser.add_argument('-ks', '--available_keys', action='store_true')
+        parser.add_argument('-e', '--expressive', action='store_true')
+        parser.add_argument('-as', '--all_sections', action='store_true', help=h.all_sections)
+        parser.add_argument('-s', '--section', type=str, help=h.section)
+
+        parser.add_argument('-r', '--generate_random_pw', action='store_true', help=h.generate_random_pw)
+        parser.add_argument('-rl', '--random_password_length', type=int, default=42)
+        parser.add_argument('-rn', '--no_special_characters', action='store_false')
+
+        parser.add_argument('-n', '--new_secrets_data', type=str, help=h.add_new_password)
+        parser.add_argument('-u', '--update', type=str)
+        parser.add_argument('-pw', '--set_password', type=str, help=h.set_password)
+        parser.add_argument('-un', '--username', type=str)
+        parser.add_argument('-w', '--website', type=str)
+        parser.add_argument('-kwargs', '--kwargs', '--keyword_arguments', type=str)
+        parser.add_argument('-ow', '--overwrite', action='store_false')
+
+        parser.add_argument('-rm', '--remove_entity', type=str, help=h.remove)
+        parser.add_argument('-rms', '--remove_section', type=str, help=h.remove)
+
+        return parser.parse_args(args)
 
     def get_all_sections(self) -> List[str]:
         """Get all sections of the secrets data file (json)."""
@@ -101,8 +232,16 @@ class PasswordCommand:
         return True
 
     def update_secrets_data(self):
-        """`pw -u <key>=<value> (-s <section>="main") <entity>`"""
-        k, v = self.args.update.split('=')
+        """`pw -u <key>=<value> (-s <section>="main") <entity>`
+        
+        If the value contains an equal sign, you can escape the assignment
+        operator with \= as in `key\=val=ue`."""
+        s = self.args.update
+        if "\\=" in s:
+            k, v = s.split("\\=")
+        else:
+            k, v = s.split('=')
+
         new_data = {k: self.crypto.encrypt(v)}
         
         if self.args.section is None:
@@ -179,3 +318,6 @@ class PasswordCommand:
         print(f'Copied {self.args.secret_key} for "{self.args.entity}" into your clipboard.')
         print('')
         return True
+
+if __name__ == "__main__":
+    print("Please use PasswordCommand.main() outside of the module.")

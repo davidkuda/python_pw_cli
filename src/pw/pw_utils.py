@@ -44,7 +44,7 @@ def my_exchandler(type, value, traceback):
 
 def find_key(key: str, dictionary: dict) -> Generator[dict, None, None]:
     """Iterate a dict recursively and yield all values if key matches."""
-    for section, secrets in dictionary:
+    for section, secrets in dictionary.items():
         for secret in secrets:
             if key.lower() in secret.lower():
                 yield {'entity': secret, 'section': section}

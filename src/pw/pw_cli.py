@@ -61,6 +61,13 @@ class PasswordCommand:
         # pw -u <key>=<value> <entity>
         if args.update:
             return pw.update_secrets_data()
+        
+        # pw -upw (<new_pw>) <entity> (-s <section>)
+        # or: pw -f <entity> -upw (<new_pw>)
+        # <new_pw> is optional, defaults to random pw
+        # change random pw with -rl <int> and -rn
+        if args.update_password:
+            return pw.update_password()
 
         # pw -rm <entity>
         if args.remove_entity:
@@ -137,6 +144,7 @@ class PasswordCommand:
 
         parser.add_argument('-n', '--new_secrets_data', type=str, help=h.add_new_password)
         parser.add_argument('-u', '--update', type=str)
+        parser.add_argument('-upw', '--update_password', type=bool, action='store_true')
         parser.add_argument('-pw', '--set_password', type=str, help=h.set_password)
         parser.add_argument('-un', '--username', type=str)
         parser.add_argument('-w', '--website', type=str)
@@ -249,6 +257,12 @@ class PasswordCommand:
               
         self.pw_client.pw_dict[self.args.section][self.args.entity].update(new_data)
         self.pw_client.save_dict_to_file()
+    
+    def update_password(self):
+        # print old pw (if need to enter before changing)
+        # create new random pw if necessary
+        # copy new pw to clipboard
+        raise NotImplementedError
 
     def get_secrets_data(self):
         if self.args.section is None:

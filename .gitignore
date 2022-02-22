@@ -1,7 +1,9 @@
-
 .DS_Store
 .idea/
+.vscode/
 commands/snippets
-encrypt.py
 .venv/
-src/__pycache__/
+venv/
+__pycache__/
+*.egg-info/
+ignore/

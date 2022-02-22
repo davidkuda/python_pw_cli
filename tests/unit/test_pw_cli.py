@@ -12,7 +12,7 @@ c5 = "-n kafka -pw stream_processing -s test"
 def test_get_password():
     args = "guitar".split()
     pw = PasswordCommand.main(args, get_test_config())
-    assert isinstance(pw, str)
+    assert pw == "pink_floyd"
 
 
 def test_get_password_from_section():

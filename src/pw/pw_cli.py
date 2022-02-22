@@ -232,8 +232,16 @@ class PasswordCommand:
         return True
 
     def update_secrets_data(self):
-        """`pw -u <key>=<value> (-s <section>="main") <entity>`"""
-        k, v = self.args.update.split('=')
+        """`pw -u <key>=<value> (-s <section>="main") <entity>`
+        
+        If the value contains an equal sign, you can escape the assignment
+        operator with \= as in `key\=val=ue`."""
+        s = self.args.update
+        if "\\=" in s:
+            k, v = s.split("\\=")
+        else:
+            k, v = s.split('=')
+
         new_data = {k: self.crypto.encrypt(v)}
         
         if self.args.section is None:

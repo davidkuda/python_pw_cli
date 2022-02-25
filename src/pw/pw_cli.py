@@ -144,7 +144,7 @@ class PasswordCommand:
 
         parser.add_argument('-n', '--new_secrets_data', type=str, help=h.add_new_password)
         parser.add_argument('-u', '--update', type=str)
-        parser.add_argument('-upw', '--update_password', type=bool, action='store_true')
+        parser.add_argument('-upw', '--update_password', action='store_true')
         parser.add_argument('-pw', '--set_password', type=str, help=h.set_password)
         parser.add_argument('-un', '--username', type=str)
         parser.add_argument('-w', '--website', type=str)

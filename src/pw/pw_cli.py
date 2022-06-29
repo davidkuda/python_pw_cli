@@ -125,7 +125,11 @@ class PasswordCommand:
 
         # pw <entity>
         if args.entity:
-            return pw.get_secrets_data_value(secrets_data)
+            pw = pw.get_secrets_data_value(secrets_data)
+            pyperclip.copy(pw)
+            print(f'Copied {args.secret_key} for "{args.entity}" into your clipboard.')
+            print('')
+            return
     
     @staticmethod
     def parse_args(args):
@@ -329,10 +333,8 @@ class PasswordCommand:
     def get_secrets_data_value(self, secrets_data):
         encrypted_secret_value = secrets_data[self.args.secret_key]
         decrypted_secret_value = self.crypto.decrypt(encrypted_secret_value)
-        pyperclip.copy(decrypted_secret_value)
-        print(f'Copied {self.args.secret_key} for "{self.args.entity}" into your clipboard.')
-        print('')
-        return True
+        return decrypted_secret_value
+
 
 if __name__ == "__main__":
     print("Please use PasswordCommand.main() outside of the module.")

@@ -89,7 +89,10 @@ class PasswordCommand:
 
         # pw -r
         if args.generate_random_pw:
-            pw.get_random_pw()
+            random_pw = pw.get_random_pw()
+            pyperclip.copy(random_pw)
+            print('The random password has been copied into your clipboard.')
+            print('')
             return True
 
         # pw -s <section>
@@ -310,10 +313,7 @@ class PasswordCommand:
             random_pw = generate_random_password(
                 password_length=self.args.random_password_length,
                 special_characters=self.args.no_special_characters)
-        pyperclip.copy(random_pw)
-        print('The random password has been copied into your clipboard.')
-        print('')
-        return True
+        return random_pw
 
     def print_secrets_data_values(self, secrets_data):
         print(f'Here are the values for "{self.args.entity}":')

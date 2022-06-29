@@ -265,6 +265,7 @@ class PasswordCommand:
               
         self.pw_client.pw_dict[self.args.section][self.args.entity].update(new_data)
         self.pw_client.save_dict_to_file()
+        print(f"Updated value of \"{k}\" of \"{self.args.entity}\"")
     
     def update_password(self):
         """Updates a password.

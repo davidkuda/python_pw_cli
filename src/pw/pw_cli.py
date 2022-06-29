@@ -267,10 +267,35 @@ class PasswordCommand:
         self.pw_client.save_dict_to_file()
     
     def update_password(self):
-        # print old pw (if need to enter before changing)
-        # create new random pw if necessary
-        # copy new pw to clipboard
-        raise NotImplementedError
+        """Updates a password.
+        
+        Example usage:
+        
+        pw aws -upw
+        (Generates a new random password for aws)
+        
+        pw aws -upw -pw new_password
+        (change password of "aws" with "new_password")
+        
+        pw aws -upw -rl 10 -rn
+        (change password of "aws" with a random pw with 10 chars and without special chars)
+        """
+        secrets_data = self.get_secrets_data()
+        old_pw = self.get_secrets_data_value(secrets_data)
+        print(f"old pw: {old_pw}")
+        if self.args.set_password:
+            new_pw = self.args.set_password
+        else:
+            new_pw = self.get_random_pw()
+
+        self.args.update = f"old_password={old_pw}"
+        self.update_secrets_data()
+
+        self.args.update = f"password={new_pw}"
+        self.update_secrets_data()
+
+        pyperclip.copy(new_pw)
+        print("Copied new pw to your clipboard.")
 
     def get_secrets_data(self):
         if self.args.section is None:

@@ -27,6 +27,14 @@ for the commands below. Here is what this tool can do:
 - `pw -rm <entity> -s <section>` -> Remove the password for `<entity>` from `<section>`
 - `pw -rms <section>` -> Remove the section `<section>`
 
+### Executing tests:
+Make sure `pytest` is installed, then:
+
+```sh
+pwd # make sure you are at root of repo
+pytest -c pytest.ini tests/
+```
+
 ### Store your passwords in a json file:
 
 ```

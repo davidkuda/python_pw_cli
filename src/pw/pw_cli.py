@@ -49,6 +49,7 @@ class PasswordCommand:
             return True
 
         # pw -f <entity>
+        args.find = args.entity # default --find
         if args.find:
             has_found = pw.find_secrets_data()
             if has_found is False:
@@ -120,6 +121,7 @@ class PasswordCommand:
             return True
 
         # pw -e <entity>
+        args.expressive = True # default --expressive
         if args.expressive:
             pw.print_secrets_data_values(secrets_data)
 

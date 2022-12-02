@@ -48,6 +48,11 @@ class PasswordCommand:
             pprint(pw.get_all_sections())
             return True
 
+        # pw --all_secrets
+        if args.list_keys:
+            pw.print_all_keys(args.section)
+            return True
+
         # pw -f <entity>
         args.find = args.entity # default --find
         if args.find:
@@ -145,6 +150,7 @@ class PasswordCommand:
         parser.add_argument('-ks', '--available_keys', action='store_true')
         parser.add_argument('-e', '--expressive', action='store_true')
         parser.add_argument('-as', '--all_sections', action='store_true', help=h.all_sections)
+        parser.add_argument('-ls', '--list-keys', action='store_true')
         parser.add_argument('-s', '--section', type=str, help=h.section)
 
         parser.add_argument('-r', '--generate_random_pw', action='store_true', help=h.generate_random_pw)
@@ -176,6 +182,18 @@ class PasswordCommand:
             self.args.section = 'main'
         for key in self.pw_client.pw_dict[self.args.section].keys():
             print(key)
+    
+    def print_all_keys(self, section: str = None):
+        if section is None:
+            for section, entities in self.pw_client.pw_dict.items():
+                for entity in entities.keys():
+                    print(f"({section}) {entity}")
+        else:
+            if self.pw_client.pw_dict.get(section) is None:
+                print(f"Didn't find section \"{section}\"")
+            for entity in self.pw_client.pw_dict[section].keys():
+                print(entity)
+            
 
     def create_section(self):
         """Creates a new section."""

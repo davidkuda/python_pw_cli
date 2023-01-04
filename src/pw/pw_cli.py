@@ -342,12 +342,44 @@ class PasswordCommand:
 
     def find_secrets_data(self):
         results_as_generator = find_key(self.args.find, self.pw_client.pw_dict)
-        results = list(results_as_generator)
-        for result in results:
-            print(f'Found "{result["entity"]}" in section "{result["section"]}".')
+        results = {}
+        for r in results_as_generator:
+            s = r["section"]
+            e = r["entity"]
+            if s not in results:
+                results[s] = [e]
+            else:
+                results[s].append(e)
+
+        if self.args.section:
+            priority_section = self.args.section
+        else:
+            priority_section = "main"
+
+        ordered_keys = [k for k in results.keys()]
+        for i, section in enumerate(ordered_keys):
+            if section == priority_section:
+                if i == 0:
+                    break
+                ordered_keys[0], ordered_keys[i] = ordered_keys[i], ordered_keys[0]
+                break
+        
+        k = priority_section
+        for i, v in enumerate(results[k]):
+            if v == self.args.entity:
+                if i == 0:
+                    break
+                results[k][0], results[k][i] = results[k][i], results[k][0]
+
+        for section in ordered_keys:
+            print(f"section {section}:")
+            for entity in results[section]:
+                print(f"  {entity}")
+        print("")
+
         if len(results) >= 1:
-            self.args.entity = results[0]['entity']
-            self.args.section = results[0]['section']
+            self.args.section = k
+            self.args.entity = results[k][0]
             return True
         else:
             print(f'No results found for the given search term "{self.args.find}"')
